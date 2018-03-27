@@ -58,6 +58,7 @@ namespace SimpleDrive.App
 
             app.UseCors(cfg =>
             {
+                // TODO: Configure CORS with origin #2
                 cfg.AllowCredentials();
                 cfg.AllowAnyMethod();
                 cfg.AllowAnyHeader();
