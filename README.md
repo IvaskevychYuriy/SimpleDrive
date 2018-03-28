@@ -1,4 +1,4 @@
-# SimpleDrive [![Build status](https://ci.appveyor.com/api/projects/status/b2gaxlk1byh9uthr/branch/dev?svg=true)](https://ci.appveyor.com/project/SimpleDriveOrganization/simpledrive/branch/dev)
+# [SimpleDrive](https://simpledrive.azurewebsites.net) [![Build status](https://ci.appveyor.com/api/projects/status/b2gaxlk1byh9uthr/branch/dev?svg=true)](https://ci.appveyor.com/project/SimpleDriveOrganization/simpledrive/branch/dev)
 
 File sharing system
 
