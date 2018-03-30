@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace SimpleDrive.App.Models
+namespace SimpleDrive.DAL
 {
     public class Role : IdentityRole<int>
     {
