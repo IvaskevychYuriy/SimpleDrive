@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SimpleDrive.App.DataTransferObjects;
-using SimpleDrive.DAL;
+using SimpleDrive.DAL.Models;
 using System.Diagnostics;
 using System.Threading.Tasks;
 

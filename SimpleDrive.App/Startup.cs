@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleDrive.DAL;
+using SimpleDrive.DAL.Models;
 using System;
 using System.Threading.Tasks;
 
