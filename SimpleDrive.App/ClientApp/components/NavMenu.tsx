@@ -35,6 +35,9 @@ export class NavMenu extends React.Component<{}, {}> {
                     <Button color="inherit">
                         <Link style={link} to="/login">Login</Link>
                     </Button>
+                    <Button color="inherit">
+                        <Link style={link} to="/register">Register</Link>
+                    </Button>
                 </Toolbar>
             </AppBar>
         );
