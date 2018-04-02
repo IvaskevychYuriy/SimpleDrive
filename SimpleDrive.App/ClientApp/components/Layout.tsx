@@ -6,12 +6,20 @@ export interface LayoutProps {
     children?: React.ReactNode;
 }
 
+const bodyDiv: React.CSSProperties = {
+    marginTop: '20px',
+    display: 'flex',
+    justifyContent: 'center'
+};
+
 export class Layout extends React.Component<LayoutProps, {}> {
     public render() {
         return (
             <div>
                 <NavMenu />
-                { this.props.children }
+                <div style={bodyDiv}>
+                    { this.props.children }
+                </div>
             </div>
         );
     }

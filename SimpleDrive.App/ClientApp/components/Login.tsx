@@ -50,8 +50,8 @@ class Login extends React.Component<RouteComponentProps<LoginProps>, LoginState>
     render() {
         return (
             <form onSubmit={this.onSubmit}>
-                <Grid container={true} direction="column">
-                    <Grid item={true} xs={4}>
+                <Grid container={true} spacing={16}>
+                    <Grid item={true} xs={12}>
                         <FormControl>
                             <InputLabel required={true} htmlFor="email">Email</InputLabel>
                             <Input
@@ -62,18 +62,18 @@ class Login extends React.Component<RouteComponentProps<LoginProps>, LoginState>
                             />
                         </FormControl>
                     </Grid>
-                        <Grid item={true} xs={4}>
-                            <FormControl>
-                                <InputLabel required={true} htmlFor="password">Password</InputLabel>
-                                <Input 
-                                    id="password"
-                                    type="password"
-                                    value={this.state.password}
-                                    onChange={this.onPasswordChange} 
-                                />
-                            </FormControl>
-                        </Grid>
-                    <Grid item={true} xs={4}>
+                    <Grid item={true} xs={12}>
+                        <FormControl>
+                            <InputLabel required={true} htmlFor="password">Password</InputLabel>
+                            <Input 
+                                id="password"
+                                type="password"
+                                value={this.state.password}
+                                onChange={this.onPasswordChange} 
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item={true} xs={6}>
                         <FormControl>
                             <InputLabel disableAnimation={true} htmlFor="rememberMe"  >Remember me</InputLabel>
                             <Input 
@@ -84,12 +84,8 @@ class Login extends React.Component<RouteComponentProps<LoginProps>, LoginState>
                             />
                         </FormControl>
                     </Grid>
-                    <Grid item={true} xs={4}>
-                        <Button>
-                            {
-                                this.isLogin ? 'Login' : 'Register'
-                            } 
-                        </Button>
+                    <Grid item={true} xs={6}>
+                        <Button type="submit"> { this.isLogin ? 'Login' : 'Register'} </Button>
                     </Grid>
                 </Grid>
             </form>
