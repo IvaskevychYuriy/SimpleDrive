@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
-import 'isomorphic-fetch';
+import authService from '../services/authentication.service';
+import http from '../services/core/http';
+
+import { LoginInfo } from '../models/login-model';
 
 interface FetchDataExampleState {
     forecasts: WeatherForecast[];
@@ -12,10 +15,12 @@ export class FetchData extends React.Component<RouteComponentProps<{}>, FetchDat
         super(props);
         this.state = { forecasts: [], loading: true };
 
-        fetch('api/SampleData/WeatherForecasts')
-            .then(response => response.json() as Promise<WeatherForecast[]>)
-            .then(data => {
-                this.setState({ forecasts: data, loading: false });
+        authService.login({email: 'admin@gmail.com', password: 'admin', rememberMe: true})
+            .then(res => {
+                http.get('SampleData/WeatherForecasts')
+                    .then(data => {
+                        this.setState({ forecasts: data.data, loading: false });
+                    });
             });
     }
 
