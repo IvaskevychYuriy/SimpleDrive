@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using SimpleDrive.App.Extensions;
 
 namespace SimpleDrive.App
 {
@@ -7,7 +8,9 @@ namespace SimpleDrive.App
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var host = BuildWebHost(args);
+            host.SeedData();
+            host.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
