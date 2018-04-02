@@ -68,8 +68,6 @@ namespace SimpleDrive.App
                 };
             });
 
-            services.AddCors();
-
             services.AddMvc();
 
             services.AddAutoMapper();
@@ -94,16 +92,6 @@ namespace SimpleDrive.App
             }
 
             app.UseAuthentication();
-
-            // TODO: move to config
-            app.UseCors(cfg =>
-            {
-                // TODO: Configure CORS with origin #2
-                cfg.AllowCredentials();
-                cfg.AllowAnyMethod();
-                cfg.AllowAnyHeader();
-                cfg.AllowAnyOrigin();
-            });
 
             app.UseStaticFiles();
 
