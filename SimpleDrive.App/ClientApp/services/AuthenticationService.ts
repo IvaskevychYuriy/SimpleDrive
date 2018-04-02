@@ -5,12 +5,12 @@ import { LoginInfo } from "../models/login-model";
 import { UserProfile } from "../models/user-profile";
 
 class AuthenticationService {
-    private static currentUserKey = 'currentUser';
+    private static readonly CURRENT_USER_KEY = 'currentUser';
 
     private _userProfile: UserProfile;
 
     constructor() { 
-        this._userProfile = JSON.parse(localStorage.getItem(AuthenticationService.currentUserKey));
+        this._userProfile = JSON.parse(localStorage.getItem(AuthenticationService.CURRENT_USER_KEY));
         this.handleResponse = this.handleResponse.bind(this);
     }
 
@@ -30,14 +30,14 @@ class AuthenticationService {
 
     logout() {
         this._userProfile = null;
-        localStorage.removeItem(AuthenticationService.currentUserKey);
+        localStorage.removeItem(AuthenticationService.CURRENT_USER_KEY);
         
         return http.post('home/logout');
     }
 
     private handleResponse(response : AxiosResponse<UserProfile>) : UserProfile {
         this._userProfile = response.data;
-        localStorage.setItem(AuthenticationService.currentUserKey, JSON.stringify(this._userProfile));
+        localStorage.setItem(AuthenticationService.CURRENT_USER_KEY, JSON.stringify(this._userProfile));
         return this._userProfile;
     }
 }
