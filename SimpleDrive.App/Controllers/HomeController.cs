@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SimpleDrive.App.Constants;
 using SimpleDrive.App.DataTransferObjects;
 using SimpleDrive.DAL.Models;
 using System.Diagnostics;
@@ -46,7 +47,7 @@ namespace SimpleDrive.App.Controllers
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRolesAsync(user, new[] { "User" });
+                    await _userManager.AddToRolesAsync(user, new[] { RoleNames.UserRoleName });
                     return await AuthorizeResultAsync(model, StatusCodes.Status200OK);
                 }
             }
@@ -84,20 +85,19 @@ namespace SimpleDrive.App.Controllers
                 var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, true);
                 if (result.Succeeded)
                 {
-                    return StatusCode(code, await MapToProfile(user));
+                    return StatusCode(code, MapToProfile(user));
                 }
             }
 
             return Unauthorized();
         }
 
-        private async Task<UserProfileDTO> MapToProfile(User user)
+        private UserProfileDTO MapToProfile(User user)
         {
             return new UserProfileDTO()
             {
                 Email = user.Email,
-                UserName = user.UserName,
-                IsAdministrator = await _userManager.IsInRoleAsync(user, "Administrator")
+                UserName = user.UserName
             };
         }
     }
