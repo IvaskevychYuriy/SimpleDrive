@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SimpleDrive.DAL;
 
 namespace SimpleDrive.App.Controllers
 {
@@ -16,6 +17,7 @@ namespace SimpleDrive.App.Controllers
 
         [Authorize]
         [HttpGet("[action]")]
+        // GET api/sampledata/weatherforecasts
         public IEnumerable<WeatherForecast> WeatherForecasts()
         {
             var rng = new Random();
