@@ -40,13 +40,18 @@ class Login extends React.Component<RouteComponentProps<LoginProps>, LoginState>
         const model = new LoginInfo();
         Object.assign(model, this.state);
 
-        if (this.isLogin) {
-            await authenticationService.login(model);
-        } else {
-            await authenticationService.register(model);
-        }
+        try {
+            if (this.isLogin) {
+                await authenticationService.login(model);
+            } else {
+                await authenticationService.register(model);
+            }
 
-        this.props.history.push('/');
+            this.props.history.push('/');
+        }
+        catch (e) {
+
+        }
     }
 
     onEmailChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
