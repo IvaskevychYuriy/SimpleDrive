@@ -4,7 +4,6 @@ const http = axios.create({
     withCredentials: true,
     baseURL: 'api/',
     headers: {
-        'Content-Type': 'application/json',
         'Accept': 'application/json'
     }
 });

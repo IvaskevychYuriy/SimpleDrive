@@ -5,6 +5,9 @@ import Grid from 'material-ui/Grid';
 import { RouteComponentProps } from 'react-router';
 import Button from 'material-ui/Button';
 import { withRouter } from 'react-router'
+import authenticationService from '../services/AuthenticationService';
+import { LoginInfo } from '../models/login-model';
+import { UserProfile } from '../models/user-profile';
 
 export interface LoginProps {
 
@@ -31,8 +34,19 @@ class Login extends React.Component<RouteComponentProps<LoginProps>, LoginState>
         return this.props.location.pathname === '/login';
     }
 
-    onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        const model = new LoginInfo();
+        Object.assign(model, this.state);
+
+        if (this.isLogin) {
+            await authenticationService.login(model);
+        } else {
+            await authenticationService.register(model);
+        }
+
+        this.props.history.push('/');
     }
 
     onEmailChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -68,17 +82,6 @@ class Login extends React.Component<RouteComponentProps<LoginProps>, LoginState>
                             <Input 
                                 id="password"
                                 type="password"
-                                value={this.state.password}
-                                onChange={this.onPasswordChange} 
-                            />
-                        </FormControl>
-                    </Grid>
-                    <Grid item={true} xs={6}>
-                        <FormControl>
-                            <InputLabel disableAnimation={true} htmlFor="rememberMe"  >Remember me</InputLabel>
-                            <Input 
-                                id="rememberMe"
-                                type="checkbox"
                                 value={this.state.password}
                                 onChange={this.onPasswordChange} 
                             />
