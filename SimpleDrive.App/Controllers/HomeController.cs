@@ -70,7 +70,7 @@ namespace SimpleDrive.App.Controllers
 
         // POST: api/Home/Logout
         [Authorize]
-        [HttpPost("api/[controller]logout")]
+        [HttpPost("api/[controller]/logout")]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
