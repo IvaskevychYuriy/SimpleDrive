@@ -68,8 +68,6 @@ namespace SimpleDrive.App
                 };
             });
 
-            services.AddCors();
-
             services.AddMvc();
 
             services.AddAutoMapper();
@@ -95,16 +93,6 @@ namespace SimpleDrive.App
 
             app.UseAuthentication();
 
-            // TODO: move to config
-            app.UseCors(cfg =>
-            {
-                // TODO: Configure CORS with origin #2
-                cfg.AllowCredentials();
-                cfg.AllowAnyMethod();
-                cfg.AllowAnyHeader();
-                cfg.AllowAnyOrigin();
-            });
-
             app.UseStaticFiles();
 
             app.UseMvc(routes =>
@@ -112,10 +100,16 @@ namespace SimpleDrive.App
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
 
-                routes.MapSpaFallbackRoute(
-                    name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
+            app.MapWhen(x => !x.Request.Path.Value.StartsWith("/api"), builder =>
+            {
+                builder.UseMvc(routes =>
+                {
+                    routes.MapSpaFallbackRoute(
+                        name: "spa-fallback",
+                        defaults: new { controller = "Home", action = "Index" });
+                });
             });
         }
     }

@@ -36,9 +36,9 @@ namespace SimpleDrive.App.Controllers
             return View();
         }
 
-        // POST: /Home/Register
+        // POST: api/Home/Register
         [AllowAnonymous]
-        [HttpPost("register")]
+        [HttpPost("api/[controller]/register")]
         public async Task<IActionResult> Register([FromBody] LoginInfoDTO model)
         {
             if (ModelState.IsValid)
@@ -55,9 +55,9 @@ namespace SimpleDrive.App.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        // POST: /Home/Login
+        // POST: api/Home/Login
         [AllowAnonymous]
-        [HttpPost("login")]
+        [HttpPost("api/[controller]/login")]
         public async Task<IActionResult> Login([FromBody] LoginInfoDTO model)
         {
             if (ModelState.IsValid)
@@ -68,9 +68,9 @@ namespace SimpleDrive.App.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        // POST: /Home/Logout
+        // POST: api/Home/Logout
         [Authorize]
-        [HttpPost("logout")]
+        [HttpPost("api/[controller]logout")]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
