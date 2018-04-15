@@ -88,7 +88,7 @@ class Login extends React.Component<RouteComponentProps<LoginProps>, LoginState>
                         </FormControl>
                     </Grid>
                     <Grid item={true} xs={6}>
-                        <Button type="submit"> { this.isLogin ? 'Login' : 'Register'} </Button>
+                        <Button type="submit" variant="raised"> { this.isLogin ? 'Login' : 'Register'} </Button>
                     </Grid>
                 </Grid>
             </form>
