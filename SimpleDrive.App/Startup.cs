@@ -7,7 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleDrive.DAL;
+using SimpleDrive.DAL.Interfaces;
 using SimpleDrive.DAL.Models;
+using SimpleDrive.DAL.Services;
 using System;
 using System.Threading.Tasks;
 
@@ -32,6 +34,8 @@ namespace SimpleDrive.App
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            RegisterSevices(services);
 
             // TODO: move to config
             services.Configure<IdentityOptions>(options =>
@@ -70,7 +74,15 @@ namespace SimpleDrive.App
 
             services.AddMvc();
 
-            services.AddAutoMapper();
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddProfiles(typeof(Startup).Assembly);
+            });
+        }
+
+        private void RegisterSevices(IServiceCollection services)
+        {
+            services.AddTransient<IFileService, FileSystemService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
