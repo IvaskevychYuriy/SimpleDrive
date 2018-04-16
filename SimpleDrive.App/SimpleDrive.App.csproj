@@ -19,15 +19,15 @@
 
   <ItemGroup>
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
+    <Compile Remove="_dbContext\**" />
     <Content Remove="ClientApp\**" />
+    <Content Remove="_dbContext\**" />
+    <EmbeddedResource Remove="_dbContext\**" />
+    <None Remove="_dbContext\**" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SimpleDrive.DAL\SimpleDrive.DAL.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="_dbContext\" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

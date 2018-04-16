@@ -5,7 +5,7 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
-import MenuIcon from 'material-ui-icons/Menu';
+import MenuIcon from 'mdi-react/MenuIcon';
 import authenticationService from '../services/AuthenticationService';
 
 const menuButtonStyle: React.CSSProperties = {
