@@ -1,7 +1,7 @@
 import * as React from 'react';
-import File from '../../models/File';
-import FileComponent from '../File';
-import fileService from '../../services/FileService';
+import File from '../models/File';
+import FileComponent from './File';
+import fileService from '../services/FileService';
 
 export interface FileGridProps {
 }
