@@ -21,14 +21,6 @@ namespace SimpleDrive.DAL
                 .HasMany(u => u.Files)
                 .WithOne(f => f.Owner)
                 .HasForeignKey(f => f.OwnerId);
-
-            builder.Entity<File>()
-                .Property(f => f.CreatedTimestamp)
-                .ValueGeneratedOnAdd();
-
-            builder.Entity<File>()
-                .Property(f => f.UpdatedTimestamp)
-                .ValueGeneratedOnAddOrUpdate();
         }
     }
 }
