@@ -1,15 +1,18 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using SimpleDrive.App.DataTransferObjects;
 using SimpleDrive.App.Extensions;
+using SimpleDrive.App.Options;
 using SimpleDrive.DAL;
 using SimpleDrive.DAL.Interfaces;
-using SimpleDrive.DAL.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace SimpleDrive.App.Controllers
@@ -20,18 +23,22 @@ namespace SimpleDrive.App.Controllers
         private readonly ApplicationDbContext _dbContext;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
+        private readonly FileSystemOptions _fsOptions; 
 
         public FilesController(
             ApplicationDbContext dbContext,
             IFileService fileService,
-            IMapper mapper)
+            IMapper mapper,
+            IOptions<FileSystemOptions> fsOptions)
         {
             _dbContext = dbContext;
             _fileService = fileService;
             _mapper = mapper;
+            _fsOptions = fsOptions.Value;
         }
 
         // GET api/<controller>
+        //[Authorize]
         [HttpGet]
         public async Task<ActionResult> Get()
         {
@@ -43,6 +50,7 @@ namespace SimpleDrive.App.Controllers
         }
 
         // GET api/<controller>/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
@@ -52,10 +60,11 @@ namespace SimpleDrive.App.Controllers
                 return BadRequest();
             }
 
-            return File(file.Path, file.ContentType, file.Name);
+            return File(GetFullPath(file.Path), file.ContentType, file.Name);
         }
 
         // POST api/<controller>
+        //[Authorize]
         [HttpPost]
         public async Task<ActionResult> Post(List<IFormFile> files)
         {
@@ -75,11 +84,11 @@ namespace SimpleDrive.App.Controllers
                 string path = _fileService.GenerateUniquePath();
                 using (var stream = file.OpenReadStream())
                 {
-                    await _fileService.AddUpdateAsync(path, stream);
+                    await _fileService.AddUpdateAsync(GetFullPath(path), stream);
                 }
 
                 var now = DateTime.UtcNow;
-                await _dbContext.Files.AddAsync(new File()
+                await _dbContext.Files.AddAsync(new DAL.Models.File()
                 {
                     Name = file.GetFileName(),
                     ContentType = file.ContentType,
@@ -95,6 +104,7 @@ namespace SimpleDrive.App.Controllers
         }
 
         // PUT api/<controller>/5
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, IFormFile file)
         {
@@ -107,7 +117,7 @@ namespace SimpleDrive.App.Controllers
             // TODO: add transaction
             using (var stream = file.OpenReadStream())
             {
-                await _fileService.AddUpdateAsync(entry.Path, stream);
+                await _fileService.AddUpdateAsync(GetFullPath(entry.Path), stream);
             }
 
             entry.Name = file.GetFileName();
@@ -120,6 +130,7 @@ namespace SimpleDrive.App.Controllers
         }
 
         // DELETE api/<controller>/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
@@ -129,10 +140,15 @@ namespace SimpleDrive.App.Controllers
                 return BadRequest();
             }
 
-            await _fileService.Remove(file.Path);
+            await _fileService.Remove(GetFullPath(file.Path));
             _dbContext.Files.Remove(file);
             await _dbContext.SaveChangesAsync();
             return Ok();
+        }
+
+        private string GetFullPath(string path)
+        {
+            return Path.Combine(_fsOptions.StoreDirectory, path);
         }
     }
 }

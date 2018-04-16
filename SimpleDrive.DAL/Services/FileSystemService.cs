@@ -9,6 +9,9 @@ namespace SimpleDrive.DAL.Services
     {
         public async Task AddUpdateAsync(string path, Stream stream)
         {
+            string folderPath = Path.GetDirectoryName(path);
+            Directory.CreateDirectory(folderPath);
+
             using (var fs = File.Open(path, FileMode.Create))
             {
                 await stream.CopyToAsync(fs);
