@@ -27,6 +27,11 @@ class FileService {
             }
         });
     }
+
+    async delete(fileId: number) {
+
+        await http.delete(`files/${fileId}`);
+    }
 }
 
 export default new FileService();

@@ -31,5 +31,10 @@ namespace SimpleDrive.DAL.Services
         {
             return Guid.NewGuid().ToString();
         }
+
+        public Stream OpenStream(string path)
+        {
+            return File.Open(path, FileMode.Open);
+        }
     }
 }

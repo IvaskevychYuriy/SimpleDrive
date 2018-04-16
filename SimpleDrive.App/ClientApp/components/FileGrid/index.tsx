@@ -30,11 +30,24 @@ export default class FileGrid extends React.Component<FileGridProps, FileGridSta
     }
 
     async componentDidMount() {
+        await this.fetch();
+    }
+
+    private fetch = async () => {
         const files = await fileService.list();
         this.setState({
             files
         });
     }
+
+    private deleteFile = async (file: File) => {
+        await fileService.delete(file.id);
+
+        const files = this.state.files.filter(f => f.id !== file.id);
+        this.setState({
+            files
+        });
+    } 
 
     render() {
         const { files } = this.state;        
@@ -43,7 +56,7 @@ export default class FileGrid extends React.Component<FileGridProps, FileGridSta
             <div style={divStyle}>
                 {
                     this.state.files.map(
-                        (file) => <FileComponent key={file.id} file={file}/>
+                        (file) => <FileComponent key={file.id} file={file} onDeleted={this.deleteFile}/>
                     )
                 }
             </div>

@@ -6,8 +6,8 @@ import { RouteComponentProps } from 'react-router';
 import Button from 'material-ui/Button';
 import { withRouter } from 'react-router'
 import authenticationService from '../services/AuthenticationService';
-import { LoginInfo } from '../models/login-model';
-import { UserProfile } from '../models/user-profile';
+import { LoginInfo } from '../models/LoginModel';
+import { UserProfile } from '../models/UserProfile';
 
 export interface LoginProps {
 
