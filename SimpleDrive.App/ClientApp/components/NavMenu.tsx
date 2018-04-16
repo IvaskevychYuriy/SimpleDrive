@@ -4,20 +4,7 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
-import { LinearProgress } from 'material-ui/Progress';
-import IconButton from 'material-ui/IconButton';
-import UploadIcon from 'mdi-react/UploadIcon';
 import authenticationService from '../services/AuthenticationService';
-import fileService from '../services/FileService';
-
-const uploadButtonStyle: React.CSSProperties = {
-    marginLeft: -12,
-    marginRight: 20,
-};
-
-const labelStyle: React.CSSProperties = {
-    display: 'none'
-};
 
 const flex: React.CSSProperties = {
     flex: 1
@@ -30,18 +17,14 @@ const link: React.CSSProperties = {
 
 interface NavMenuState {
     isLoggedIn: boolean;
-    uploadPercentCompleted: number;
 }
 
 export class NavMenu extends React.Component<{}, NavMenuState> {
-    private inputFileRef: HTMLInputElement;
-
     constructor(props: {}) {
         super(props);
 
         this.state = {
-            isLoggedIn: authenticationService.isLoggedIn,
-            uploadPercentCompleted: 0
+            isLoggedIn: authenticationService.isLoggedIn
         };
     }
 
@@ -63,34 +46,12 @@ export class NavMenu extends React.Component<{}, NavMenuState> {
         await authenticationService.logout();
     }
 
-    onUploadProgressChanged = (percentCompleted: number) => {
-        this.setState({
-            uploadPercentCompleted: percentCompleted
-        });
-    }
-
-    onFileChanged = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const fileInput = e.currentTarget;
-        const { files } = fileInput;
-
-        if (files.length > 0) {
-            await fileService.upload(files, this.onUploadProgressChanged);
-        }
-    }
-
     public render() {
         return (
             <AppBar>
                 <Toolbar>
-                    <label style={labelStyle}>
-                        <input type="file" ref={ref => this.inputFileRef = ref} onChange={this.onFileChanged} />
-                    </label>
-                    <IconButton style={uploadButtonStyle} onClick={e => this.inputFileRef.click()} color="inherit">
-                        <UploadIcon />
-                    </IconButton>
                     <Typography style={flex} variant="title" color="inherit">
                         <Link style={link} to="/">SimpleDrive</Link>
-                        <LinearProgress color="secondary" variant="determinate" value={this.state.uploadPercentCompleted} />
                     </Typography>                    
                     {
                         this.state.isLoggedIn ?
