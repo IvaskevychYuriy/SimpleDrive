@@ -7,7 +7,7 @@ export interface LayoutProps {
 }
 
 const bodyDiv: React.CSSProperties = {
-    marginTop: '20px',
+    marginTop: '80px',
     display: 'flex',
     justifyContent: 'center'
 };

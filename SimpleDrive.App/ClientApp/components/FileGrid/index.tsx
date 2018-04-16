@@ -1,6 +1,7 @@
 import * as React from 'react';
 import File from '../../models/File';
 import FileComponent from '../File';
+import fileService from '../../services/FileService';
 
 export interface FileGridProps {
 }
@@ -23,18 +24,16 @@ export default class FileGrid extends React.Component<FileGridProps, FileGridSta
     constructor(props: FileGridProps) {
         super(props);
 
-        const files: File[] = [];
-        for (let i = 0; i < 40; ++i) {
-            const file = new File({
-                id: i,
-                name: `'File #${i}`
-            });
-            files.push(file);
-        }
-
         this.state = {
-            files
+            files: []
         };
+    }
+
+    async componentDidMount() {
+        const files = await fileService.list();
+        this.setState({
+            files
+        });
     }
 
     render() {
