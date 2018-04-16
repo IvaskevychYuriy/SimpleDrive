@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace SimpleDrive.DAL.Models
@@ -22,5 +23,7 @@ namespace SimpleDrive.DAL.Models
         public int OwnerId { get; set; }
 
         public virtual User Owner { get; set; }
+        public virtual ICollection<ResourcePermission> ResourcePermissions { get; set; }
+
     }
 }

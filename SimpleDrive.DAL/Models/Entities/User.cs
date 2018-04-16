@@ -22,5 +22,6 @@ namespace SimpleDrive.DAL.Models
         }
 
         public virtual ICollection<File> Files { get; set; }
+        public virtual ICollection<ResourcePermission> ResourcePermissions { get; set; }
     }
 }
