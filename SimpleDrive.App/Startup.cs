@@ -6,8 +6,11 @@ using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleDrive.App.Options;
 using SimpleDrive.DAL;
+using SimpleDrive.DAL.Interfaces;
 using SimpleDrive.DAL.Models;
+using SimpleDrive.DAL.Services;
 using System;
 using System.Threading.Tasks;
 
@@ -33,6 +36,27 @@ namespace SimpleDrive.App
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            RegisterSevices(services);
+
+            ConfigureOptions(services);
+
+            services.AddMvc();
+
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddProfiles(typeof(Startup).Assembly);
+            });
+        }
+
+        private void ConfigureOptions(IServiceCollection services)
+        {
+            ConfigureAuthOptions(services);
+
+            services.Configure<FileSystemOptions>(Configuration.GetSection("FileSystemOptions"));
+        }
+
+        private void ConfigureAuthOptions(IServiceCollection services)
+        {
             // TODO: move to config
             services.Configure<IdentityOptions>(options =>
             {
@@ -51,7 +75,7 @@ namespace SimpleDrive.App
                 // User settings
                 options.User.RequireUniqueEmail = true;
             });
-            
+
             // TODO: move to config
             services.ConfigureApplicationCookie(options =>
             {
@@ -67,10 +91,11 @@ namespace SimpleDrive.App
                     return Task.CompletedTask;
                 };
             });
+        }
 
-            services.AddMvc();
-
-            services.AddAutoMapper();
+        private void RegisterSevices(IServiceCollection services)
+        {
+            services.AddTransient<IFileService, FileSystemService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
