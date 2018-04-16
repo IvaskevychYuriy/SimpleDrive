@@ -90,8 +90,8 @@ export class NavMenu extends React.Component<{}, NavMenuState> {
                     </IconButton>
                     <Typography style={flex} variant="title" color="inherit">
                         <Link style={link} to="/">SimpleDrive</Link>
-                    </Typography>
-                    <LinearProgress variant="query" value={this.state.uploadPercentCompleted} />
+                        <LinearProgress color="secondary" variant="determinate" value={this.state.uploadPercentCompleted} />
+                    </Typography>                    
                     {
                         this.state.isLoggedIn ?
                             (
