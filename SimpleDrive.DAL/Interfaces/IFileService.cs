@@ -10,5 +10,7 @@ namespace SimpleDrive.DAL.Interfaces
         Task Remove(string path);
 
         string GenerateUniquePath();
+
+        Stream OpenStream(string path);
     }
 }

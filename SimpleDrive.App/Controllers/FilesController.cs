@@ -60,7 +60,8 @@ namespace SimpleDrive.App.Controllers
                 return BadRequest();
             }
 
-            return File(GetFullPath(file.Path), file.ContentType, file.Name);
+            var stream = _fileService.OpenStream(GetFullPath(file.Path));
+            return File(stream, file.ContentType, file.Name);
         }
 
         // POST api/<controller>

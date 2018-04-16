@@ -8,7 +8,8 @@ import Icon from 'material-ui/Icon';
 import FileIcon from 'mdi-react/FileIcon';
 
 export interface FileProps {
-    file: FileModel
+    file: FileModel,
+    onDeleted: (file: FileModel) => Promise<void>
 }
 
 export interface FileState {
@@ -28,6 +29,10 @@ export default class File extends React.Component<FileProps, FileState> {
         }
     }
 
+    private onDeleteClicked = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        await this.props.onDeleted(this.props.file);
+    }
+
     render() {
         return (
             <Card>
@@ -40,9 +45,8 @@ export default class File extends React.Component<FileProps, FileState> {
                     </IconButton>
                 </CardContent>
                 <CardActions>
-                    <Button size="small">Download</Button>
-                    <Button size="small">Rename</Button>
-                    <Button size="small">Delete</Button>
+                    <Button size="small" href={this.props.file.uri}>Download</Button>
+                    <Button size="small" onClick={this.onDeleteClicked}>Delete</Button>
                 </CardActions>
             </Card>
         );
