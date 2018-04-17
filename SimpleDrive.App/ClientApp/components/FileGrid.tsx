@@ -32,6 +32,11 @@ const gridStyle: React.CSSProperties = {
     marginTop: '10px'
 };
 
+const uploadBtnContainer: React.CSSProperties = {
+    textAlign: 'center',
+    minHeight: '5em'
+};
+
 export default class FileGrid extends React.Component<FileGridProps, FileGridState> {
     private inputFileRef: HTMLInputElement;
 
@@ -65,8 +70,12 @@ export default class FileGrid extends React.Component<FileGridProps, FileGridSta
     }
 
     private onUploadProgressChanged = (percentCompleted: number) => {
+        if (percentCompleted <= 0 || percentCompleted >= 100) {
+            percentCompleted = 0;
+        }
+
         this.setState({
-            uploadPercentCompleted: percentCompleted
+            uploadPercentCompleted: percentCompleted,
         });
     }
 
@@ -83,20 +92,28 @@ export default class FileGrid extends React.Component<FileGridProps, FileGridSta
     render() {
         const { files } = this.state;        
 
+        const isInProgress = this.state.uploadPercentCompleted > 0;
+
         return <div style={divStyle}>
-            <LinearProgress variant="determinate" value={this.state.uploadPercentCompleted} />
+            <LinearProgress variant="determinate"
+                value={this.state.uploadPercentCompleted}
+                style={{ display: isInProgress ? 'block' : 'none' }} />
+
+            <label style={labelStyle}>
+                <input type="file" ref={ref => this.inputFileRef = ref} onChange={this.onFileChanged} />
+            </label>
+            <div style={uploadBtnContainer}>
+                <IconButton onClick={e => this.inputFileRef.click()} color="inherit">
+                    <UploadIcon className="upload-btn" size={32} />
+                </IconButton>
+            </div>
+            
             <div style={gridStyle}>
                 {
                     this.state.files.map(
                         (file) => <FileComponent key={file.id} file={file} onDeleted={this.deleteFile}/>
                     )
                 }
-                <label style={labelStyle}>
-                    <input type="file" ref={ref => this.inputFileRef = ref} onChange={this.onFileChanged} />
-                </label>
-                <IconButton onClick={e => this.inputFileRef.click()} color="inherit">
-                    <UploadIcon size={32}/>
-                </IconButton>
             </div>
         </div>;
     }

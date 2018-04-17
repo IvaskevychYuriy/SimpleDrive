@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, RouteComponentProps } from 'react-router-dom';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
@@ -19,8 +19,9 @@ interface NavMenuState {
     isLoggedIn: boolean;
 }
 
-export class NavMenu extends React.Component<{}, NavMenuState> {
-    constructor(props: {}) {
+export class NavMenu extends React.Component<RouteComponentProps<{}>, NavMenuState> {
+
+    constructor(props: RouteComponentProps<{}>) {
         super(props);
 
         this.state = {
@@ -61,11 +62,11 @@ export class NavMenu extends React.Component<{}, NavMenuState> {
                                 </Button>
                             ) : (
                                 <>
-                                    <Button color="inherit">
-                                        <Link style={link} to="/login">Login</Link>
+                                    <Button onClick={() => this.props.history.push('/login')} color="inherit">
+                                        Login
                                     </Button>
-                                    <Button color="inherit">
-                                        <Link style={link} to="/register">Register</Link>
+                                    <Button onClick={() => this.props.history.push('/register')} color="inherit">
+                                        Register
                                     </Button>
                                 </>
                             )

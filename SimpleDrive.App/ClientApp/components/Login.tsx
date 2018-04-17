@@ -69,9 +69,9 @@ class Login extends React.Component<RouteComponentProps<LoginProps>, LoginState>
     render() {
         return (
             <form onSubmit={this.onSubmit}>
-                <Grid container={true} spacing={16}>
+                <Grid container={true} spacing={16} justify="center">
                     <Grid item={true} xs={12}>
-                        <FormControl>
+                        <FormControl fullWidth={true}>
                             <InputLabel required={true} htmlFor="email">Email</InputLabel>
                             <Input
                                 id="email"
@@ -82,7 +82,7 @@ class Login extends React.Component<RouteComponentProps<LoginProps>, LoginState>
                         </FormControl>
                     </Grid>
                     <Grid item={true} xs={12}>
-                        <FormControl>
+                        <FormControl fullWidth={true}>
                             <InputLabel required={true} htmlFor="password">Password</InputLabel>
                             <Input 
                                 id="password"
@@ -92,8 +92,8 @@ class Login extends React.Component<RouteComponentProps<LoginProps>, LoginState>
                             />
                         </FormControl>
                     </Grid>
-                    <Grid item={true} xs={6}>
-                        <Button type="submit" variant="raised"> { this.isLogin ? 'Login' : 'Register'} </Button>
+                    <Grid item={true} xs={4}>
+                        <Button fullWidth={true} type="submit" variant="raised"> {this.isLogin ? 'Login' : 'Register'} </Button>
                     </Grid>
                 </Grid>
             </form>
