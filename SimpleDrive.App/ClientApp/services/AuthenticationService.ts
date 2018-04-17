@@ -1,8 +1,8 @@
 import http from "./core/http";
 import { AxiosResponse } from "axios";
 
-import { LoginInfo } from "../models/login-model";
-import { UserProfile } from "../models/user-profile";
+import { LoginInfo } from "../models/LoginModel";
+import { UserProfile } from "../models/UserProfile";
 
 class AuthenticationService {
     private static readonly CURRENT_USER_KEY = 'currentUser';

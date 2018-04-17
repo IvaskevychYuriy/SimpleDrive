@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -14,13 +15,16 @@ namespace SimpleDrive.App.Controllers
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
+        private readonly IMapper _mapper;
 
         public HomeController(
             SignInManager<User> signInManager,
-            UserManager<User> userManager)
+            UserManager<User> userManager,
+            IMapper mapper)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _mapper = mapper;
         }
 
         // GET: /Home/Index
@@ -85,20 +89,11 @@ namespace SimpleDrive.App.Controllers
                 var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, true);
                 if (result.Succeeded)
                 {
-                    return StatusCode(code, MapToProfile(user));
+                    return StatusCode(code, _mapper.Map<UserProfileDTO>(user));
                 }
             }
 
             return Unauthorized();
-        }
-
-        private UserProfileDTO MapToProfile(User user)
-        {
-            return new UserProfileDTO()
-            {
-                Email = user.Email,
-                UserName = user.UserName
-            };
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27428.2011
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleDrive.App", "SimpleDrive.App\SimpleDrive.App.csproj", "{38B121D9-4E0F-47E6-A537-BDA93AA9ADCF}"
 EndProject
@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDrive.DAL", "SimpleDrive.DAL\SimpleDrive.DAL.csproj", "{B4314286-9242-4446-ACE4-C0DB135A349E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleDrive.DAL", "SimpleDrive.DAL\SimpleDrive.DAL.csproj", "{B4314286-9242-4446-ACE4-C0DB135A349E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

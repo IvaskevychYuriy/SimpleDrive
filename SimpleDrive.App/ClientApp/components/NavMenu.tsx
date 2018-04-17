@@ -1,17 +1,10 @@
 import * as React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, RouteComponentProps } from 'react-router-dom';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
-import MenuIcon from 'material-ui-icons/Menu';
 import authenticationService from '../services/AuthenticationService';
-
-const menuButtonStyle: React.CSSProperties = {
-    marginLeft: -12,
-    marginRight: 20,
-};
 
 const flex: React.CSSProperties = {
     flex: 1
@@ -26,10 +19,11 @@ interface NavMenuState {
     isLoggedIn: boolean;
 }
 
-export class NavMenu extends React.Component<{}, NavMenuState> {
-    constructor(props: {}) {
+export class NavMenu extends React.Component<RouteComponentProps<{}>, NavMenuState> {
+
+    constructor(props: RouteComponentProps<{}>) {
         super(props);
-        
+
         this.state = {
             isLoggedIn: authenticationService.isLoggedIn
         };
@@ -55,14 +49,11 @@ export class NavMenu extends React.Component<{}, NavMenuState> {
 
     public render() {
         return (
-            <AppBar position="static">
+            <AppBar>
                 <Toolbar>
-                    <IconButton style={menuButtonStyle} color="inherit" aria-label="Menu">
-                        <MenuIcon />
-                    </IconButton>
                     <Typography style={flex} variant="title" color="inherit">
                         <Link style={link} to="/">SimpleDrive</Link>
-                    </Typography>
+                    </Typography>                    
                     {
                         this.state.isLoggedIn ?
                             (
@@ -71,11 +62,11 @@ export class NavMenu extends React.Component<{}, NavMenuState> {
                                 </Button>
                             ) : (
                                 <>
-                                    <Button color="inherit">
-                                        <Link style={link} to="/login">Login</Link>
+                                    <Button onClick={() => this.props.history.push('/login')} color="inherit">
+                                        Login
                                     </Button>
-                                    <Button color="inherit">
-                                        <Link style={link} to="/register">Register</Link>
+                                    <Button onClick={() => this.props.history.push('/register')} color="inherit">
+                                        Register
                                     </Button>
                                 </>
                             )
