@@ -22,12 +22,11 @@ namespace SimpleDrive.App.Extensions
             using (var scope = scopeFactory.CreateScope())
             {
                 var db = scope.ServiceProvider.GetService<ApplicationDbContext>();
-
-
-
+                
                 SeedRoles(scope);
                 SeedUsers(scope);
                 SeedPermissions(db);
+
                 db.SaveChanges();
             }
         }
@@ -46,8 +45,8 @@ namespace SimpleDrive.App.Extensions
             {
                 roleManager.CreateAsync(new Role(RoleNames.UserRoleName)).Wait();
             }
-
         }
+
         private static void SeedUsers(IServiceScope scope)
         {
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
@@ -65,6 +64,7 @@ namespace SimpleDrive.App.Extensions
                 userManager.AddToRolesAsync(admin, new[] { RoleNames.UserRoleName, RoleNames.AdminRoleName }).Wait();
             }
         }
+
         private static void SeedPermissions(ApplicationDbContext context)
         {
             foreach (Permissions permission in Enum.GetValues(typeof(Permissions)))
@@ -78,7 +78,6 @@ namespace SimpleDrive.App.Extensions
                     });
                 }
             }
-
         }
     }
 }

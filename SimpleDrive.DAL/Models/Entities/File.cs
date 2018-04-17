@@ -6,6 +6,11 @@ namespace SimpleDrive.DAL.Models
 {
     public class File : EntityBase<int>
     {
+        public File()
+        {
+            ResourcePermissions = new HashSet<ResourcePermission>();
+        }
+
         [Required]
         [StringLength(255)]
         public string Name { get; set; }
@@ -23,7 +28,7 @@ namespace SimpleDrive.DAL.Models
         public int OwnerId { get; set; }
 
         public virtual User Owner { get; set; }
-        public virtual ICollection<ResourcePermission> ResourcePermissions { get; set; }
 
+        public virtual ICollection<ResourcePermission> ResourcePermissions { get; set; }
     }
 }

@@ -19,9 +19,11 @@ namespace SimpleDrive.DAL.Models
         private void Init()
         {
             Files = new HashSet<File>();
+            ResourcePermissions = new HashSet<ResourcePermission>();
         }
 
         public virtual ICollection<File> Files { get; set; }
+
         public virtual ICollection<ResourcePermission> ResourcePermissions { get; set; }
     }
 }

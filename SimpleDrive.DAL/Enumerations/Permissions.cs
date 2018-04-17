@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SimpleDrive.DAL.Enumerations
+﻿namespace SimpleDrive.DAL.Enumerations
 {
     public enum Permissions
     {

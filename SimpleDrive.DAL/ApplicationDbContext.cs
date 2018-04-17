@@ -7,7 +7,9 @@ namespace SimpleDrive.DAL
     public class ApplicationDbContext : IdentityDbContext<User, Role, int>
     {
         public DbSet<File> Files { get; set; }
+
         public DbSet<Permission> Permissions { get; set; }
+
         public DbSet<ResourcePermission> ResourcePermissions { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -42,7 +44,6 @@ namespace SimpleDrive.DAL
                 .WithMany(p => p.ResourcePermissions)
                 .HasForeignKey(p => p.PermissionId)
                 .OnDelete(DeleteBehavior.Cascade);
-
         }
     }
 }
