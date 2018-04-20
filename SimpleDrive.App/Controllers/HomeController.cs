@@ -44,7 +44,7 @@ namespace SimpleDrive.App.Controllers
         [AllowAnonymous]
         [HttpPost("api/[controller]/register")]
         public async Task<IActionResult> Register([FromBody] LoginInfoDTO model)
-        {
+        {   
             if (ModelState.IsValid)
             {
                 var user = new User { UserName = model.Email, Email = model.Email };
@@ -56,7 +56,7 @@ namespace SimpleDrive.App.Controllers
                 }
             }
 
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(StatusCodes.Status400BadRequest);
         }
 
         // POST: api/Home/Login
@@ -69,7 +69,7 @@ namespace SimpleDrive.App.Controllers
                 return await AuthorizeResultAsync(model, StatusCodes.Status200OK);
             }
 
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(StatusCodes.Status400BadRequest);
         }
 
         // POST: api/Home/Logout

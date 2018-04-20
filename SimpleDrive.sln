@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleDrive.DAL", "SimpleDrive.DAL\SimpleDrive.DAL.csproj", "{B4314286-9242-4446-ACE4-C0DB135A349E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDrive.IntegrationTests", "SimpleDrive.IntegrationTests\SimpleDrive.IntegrationTests.csproj", "{143AB711-250D-46EB-8831-ACA4D980A115}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,10 @@ Global
 		{B4314286-9242-4446-ACE4-C0DB135A349E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4314286-9242-4446-ACE4-C0DB135A349E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4314286-9242-4446-ACE4-C0DB135A349E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{143AB711-250D-46EB-8831-ACA4D980A115}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{143AB711-250D-46EB-8831-ACA4D980A115}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{143AB711-250D-46EB-8831-ACA4D980A115}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{143AB711-250D-46EB-8831-ACA4D980A115}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
