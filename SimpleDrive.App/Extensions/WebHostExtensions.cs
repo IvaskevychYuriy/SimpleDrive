@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleDrive.App.Constants;
 using SimpleDrive.DAL;
@@ -15,7 +16,7 @@ namespace SimpleDrive.App.Extensions
         private const string DefaultAdminUserName = "Administrator";
         private const string DefaultAdminUserEmail = "admin@gmail.com";
         private const string DefaultAdminUserPass = "admin";
-
+        
         public static void SeedData(this IWebHost host)
         {
             var scopeFactory = host.Services.GetRequiredService<IServiceScopeFactory>();

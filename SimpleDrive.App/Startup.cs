@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleDrive.App.Constants;
 using SimpleDrive.App.Options;
 using SimpleDrive.DAL;
 using SimpleDrive.DAL.Interfaces;
@@ -18,19 +20,35 @@ namespace SimpleDrive.App
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
 
+        public IHostingEnvironment Environment { get; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("ApplicationDbContext"))
-            );
+            if (Environment.EnvironmentName == EnvironmentOptions.TestingName)
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    {
+                        options.UseSqlServer(Configuration.GetConnectionString("ApplicationDbContext"));
+                        options.ConfigureWarnings(cfg => cfg.Ignore(RelationalEventId.AmbientTransactionWarning));
+                    },
+                    ServiceLifetime.Singleton
+                );
+            }
+            else
+            {
+                services.AddDbContextPool<ApplicationDbContext>(
+                    options => options.UseSqlServer(Configuration.GetConnectionString("ApplicationDbContext"))
+                );
+            }
 
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -99,9 +117,9 @@ namespace SimpleDrive.App
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
+            if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
@@ -110,6 +128,9 @@ namespace SimpleDrive.App
                     HotModuleReplacement = true,
                     ReactHotModuleReplacement = true
                 });
+            }
+            else if (Environment.EnvironmentName == EnvironmentOptions.TestingName)
+            {
             }
             else
             {
