@@ -10,7 +10,6 @@ import { LoginInfo } from '../models/LoginModel';
 import { UserProfile } from '../models/UserProfile';
 
 export interface LoginProps {
-
 }
 
 export interface LoginState {

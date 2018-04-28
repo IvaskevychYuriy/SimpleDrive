@@ -5,6 +5,7 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import authenticationService from '../services/AuthenticationService';
+import { MenuRouterProps } from '../interfaces/MenuRouterProps';
 
 const flex: React.CSSProperties = {
     flex: 1
@@ -15,32 +16,17 @@ const link: React.CSSProperties = {
     color: 'inherit'
 };
 
+const appBar: React.CSSProperties = {
+    zIndex: 10,
+};
+
 interface NavMenuState {
-    isLoggedIn: boolean;
 }
 
-export class NavMenu extends React.Component<RouteComponentProps<{}>, NavMenuState> {
+export class NavMenu extends React.Component<MenuRouterProps<{}>, NavMenuState> {
 
-    constructor(props: RouteComponentProps<{}>) {
+    constructor(props: MenuRouterProps<{}>) {
         super(props);
-
-        this.state = {
-            isLoggedIn: authenticationService.isLoggedIn
-        };
-    }
-
-    componentDidMount() {
-        authenticationService.addCallback(this.onLoginStateChanged);
-    }
-
-    componentWillUnmount() {
-        authenticationService.removeCallback(this.onLoginStateChanged);
-    }
-
-    onLoginStateChanged = (isLoggedIn: boolean) => {
-        this.setState({
-            isLoggedIn
-        });
     }
 
     onLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -49,13 +35,13 @@ export class NavMenu extends React.Component<RouteComponentProps<{}>, NavMenuSta
 
     public render() {
         return (
-            <AppBar>
+            <AppBar position="absolute" style={appBar} >
                 <Toolbar>
                     <Typography style={flex} variant="title" color="inherit">
                         <Link style={link} to="/">SimpleDrive</Link>
                     </Typography>                    
                     {
-                        this.state.isLoggedIn ?
+                        this.props.isLoggedIn ?
                             (
                                 <Button color="inherit" onClick={this.onLogout} >
                                     Logout
