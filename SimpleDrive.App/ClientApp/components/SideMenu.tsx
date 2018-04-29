@@ -41,13 +41,13 @@ export class SideMenu extends React.Component<MenuRouterProps<{}>, SideMenuState
 
     private mainItems = (
         <div>
-            <ListItem button>
+            <ListItem button onClick={() => this.props.history.push('/files')}>
                 <ListItemIcon>
                     <FolderIcon />
                 </ListItemIcon>
                 <ListItemText primary="My Documents" />
             </ListItem>
-            <ListItem button>
+            <ListItem button onClick={() => this.props.history.push('/shared')}>
                 <ListItemIcon>
                     <FolderSharedIcon />
                 </ListItemIcon>
