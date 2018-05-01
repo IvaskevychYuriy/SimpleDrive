@@ -25,19 +25,9 @@
     <EmbeddedResource Remove="_dbContext\**" />
     <None Remove="_dbContext\**" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="ClientApp\components\Menu.tsx" />
-    <None Remove="ClientApp\components\SideMenu.tsx" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\SimpleDrive.DAL\SimpleDrive.DAL.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\components\Menu.tsx" />
-    <TypeScriptCompile Include="ClientApp\components\SideMenu.tsx" />
   </ItemGroup>
 
   <ItemGroup>
