@@ -9,7 +9,7 @@ import FileIcon from 'mdi-react/FileIcon';
 
 export interface FileProps {
     file: FileModel,
-    onDeleted: (file: FileModel) => Promise<void>
+    onDeleted?: (file: FileModel) => Promise<void>
 }
 
 export interface FileState {
@@ -25,12 +25,13 @@ export default class File extends React.Component<FileProps, FileState> {
     constructor(props: FileProps) {
         super(props);
 
-        this.state = {
-        }
+        this.state = {};
     }
 
     private onDeleteClicked = async (e: React.MouseEvent<HTMLButtonElement>) => {
-        await this.props.onDeleted(this.props.file);
+        if (this.props.onDeleted) {
+            await this.props.onDeleted(this.props.file);
+        }
     }
 
     render() {
@@ -46,7 +47,9 @@ export default class File extends React.Component<FileProps, FileState> {
                 </CardContent>
                 <CardActions>
                     <Button size="small" href={this.props.file.uri}>Download</Button>
-                    <Button size="small" onClick={this.onDeleteClicked}>Delete</Button>
+                    {this.props.onDeleted 
+                        ? <Button size="small" onClick={this.onDeleteClicked}>Delete</Button> 
+                        : null}
                 </CardActions>
             </Card>
         );

@@ -3,10 +3,15 @@ import { AxiosResponse } from "axios";
 import File from '../models/File';
 
 class FileService {
-    async list(): Promise<File[]> {
+    async listPersonal(): Promise<File[]> {
         const response = await http.get<File[]>('files');
-
-        return response.data.map(x => new File(x));
+        return this.mapToFiles(response);
+    }
+    
+    // mocked
+    async listShared(): Promise<File[]> {
+        const response = await http.get<File[]>('files');
+        return this.mapToFiles(response);
     }
 
     async upload(files: FileList, progress: (percentCompleted: number) => void) {
@@ -32,6 +37,8 @@ class FileService {
 
         await http.delete(`files/${fileId}`);
     }
+
+    private mapToFiles = (response: AxiosResponse<File[]>) => response.data.map(x => new File(x));
 }
 
 export default new FileService();

@@ -25,7 +25,7 @@
     <EmbeddedResource Remove="_dbContext\**" />
     <None Remove="_dbContext\**" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\SimpleDrive.DAL\SimpleDrive.DAL.csproj" />
   </ItemGroup>
