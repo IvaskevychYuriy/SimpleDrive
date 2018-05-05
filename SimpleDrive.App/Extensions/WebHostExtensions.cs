@@ -1,13 +1,9 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleDrive.App.Constants;
 using SimpleDrive.DAL;
-using SimpleDrive.DAL.Enumerations;
 using SimpleDrive.DAL.Models;
-using System;
-using System.Linq;
 
 namespace SimpleDrive.App.Extensions
 {
@@ -26,7 +22,6 @@ namespace SimpleDrive.App.Extensions
                 
                 SeedRoles(scope);
                 SeedUsers(scope);
-                SeedPermissions(db);
 
                 db.SaveChanges();
             }
@@ -63,21 +58,6 @@ namespace SimpleDrive.App.Extensions
 
                 userManager.CreateAsync(admin, DefaultAdminUserPass).Wait();
                 userManager.AddToRolesAsync(admin, new[] { RoleNames.UserRoleName, RoleNames.AdminRoleName }).Wait();
-            }
-        }
-
-        private static void SeedPermissions(ApplicationDbContext context)
-        {
-            foreach (Permissions permission in Enum.GetValues(typeof(Permissions)))
-            {
-                if (!context.Permissions.Any(p => p.Id == permission))
-                {
-                    context.Permissions.Add(new Permission()
-                    {
-                        Id = permission,
-                        Name = permission.ToString()
-                    });
-                }
             }
         }
     }

@@ -3,6 +3,7 @@
     public enum Permissions
     {
         Read = 1,
-        Delete
+        Write,
+        Full
     }
 }

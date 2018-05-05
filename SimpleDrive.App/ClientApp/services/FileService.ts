@@ -1,6 +1,7 @@
 import http from "./core/http";
 import { AxiosResponse } from "axios";
 import File from '../models/File';
+import { PermissionTypes } from "../models/enumerations/PermissionTypes";
 
 class FileService {
     async listPersonal(): Promise<File[]> {
@@ -34,8 +35,11 @@ class FileService {
     }
 
     async delete(fileId: number) {
-
         await http.delete(`files/${fileId}`);
+    }
+
+    getSharingLink(file: File, permission: PermissionTypes): string {
+        return `${location.origin}/share?id=${file.path}&p=${permission}`;
     }
 
     private mapToFiles = (response: AxiosResponse<File[]>) => response.data.map(x => new File(x));

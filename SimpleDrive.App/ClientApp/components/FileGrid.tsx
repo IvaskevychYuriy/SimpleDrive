@@ -20,7 +20,7 @@ export default class FileGrid extends React.Component<FileGridProps, FileGridSta
         return (            
             <div style={gridStyle}> {
                     this.props.files.map(
-                        (file) => <FileComponent key={file.id} file={file} onDeleted={this.props.onDeleted}/>
+                        (file) => <FileComponent key={file.id} file={file} onDeleted={this.props.onDeleted} enableSharing={this.props.enableSharing} />
                     )
                 }
             </div>

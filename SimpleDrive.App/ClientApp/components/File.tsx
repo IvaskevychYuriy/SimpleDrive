@@ -1,18 +1,27 @@
 import * as React from 'react';
 import FileModel from '../models/File';
+import FileShareDialog from '../components/FileShareDialog';
 import Card, { CardHeader, CardMedia, CardContent, CardActions } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
-import Icon from 'material-ui/Icon';
+import DownloadIcon from 'mdi-react/DownloadIcon';
+import DeleteIcon from 'mdi-react/DeleteIcon';
+import ShareIcon from 'mdi-react/ShareIcon';
 import FileIcon from 'mdi-react/FileIcon';
+import Tooltip from 'material-ui/Tooltip';
 
-export interface FileProps {
+import fileService from '../services/FileService';
+import { PermissionTypes } from '../models/enumerations/PermissionTypes';
+
+interface FileProps {
     file: FileModel,
-    onDeleted?: (file: FileModel) => Promise<void>
+    onDeleted?: (file: FileModel) => Promise<void>,
+    enableSharing?: boolean
 }
 
-export interface FileState {
+interface FileState {
+    openShareDialog: boolean;
 }
 
 const fileStyle: React.CSSProperties = {
@@ -21,17 +30,38 @@ const fileStyle: React.CSSProperties = {
     backgroundColor: 'red',
 };
 
+const actionsContainerStyle: React.CSSProperties = {
+    display: 'flex',
+    justifyContent: 'flex-end'
+};
+
 export default class File extends React.Component<FileProps, FileState> {
     constructor(props: FileProps) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            openShareDialog: false
+        };
     }
 
     private onDeleteClicked = async (e: React.MouseEvent<HTMLButtonElement>) => {
         if (this.props.onDeleted) {
             await this.props.onDeleted(this.props.file);
         }
+    }
+    
+    private onShareClicked = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (this.props.enableSharing) {
+            this.setState({
+                openShareDialog: true
+            });
+        }
+    }
+
+    private closeShareDialog = () => {
+        this.setState({
+            openShareDialog: false
+        });
     }
 
     render() {
@@ -45,12 +75,32 @@ export default class File extends React.Component<FileProps, FileState> {
                         <FileIcon/>
                     </IconButton>
                 </CardContent>
-                <CardActions>
-                    <Button size="small" href={this.props.file.uri}>Download</Button>
+
+                <CardActions style={actionsContainerStyle}>
                     {this.props.onDeleted 
-                        ? <Button size="small" onClick={this.onDeleteClicked}>Delete</Button> 
+                        ? <Tooltip title="Delete">
+                            <IconButton onClick={this.onDeleteClicked}>
+                                <DeleteIcon />
+                            </IconButton> 
+                          </Tooltip>
+                        : null}
+                    
+                    <Tooltip title="Download">
+                        <IconButton href={this.props.file.uri}>
+                            <DownloadIcon />
+                        </IconButton>
+                    </Tooltip>
+
+                    {this.props.enableSharing 
+                        ? <Tooltip title="Share">
+                            <IconButton onClick={this.onShareClicked}>
+                                <ShareIcon />
+                            </IconButton> 
+                          </Tooltip>
                         : null}
                 </CardActions>
+
+                <FileShareDialog isOpen={this.state.openShareDialog} file={this.props.file} onClose={this.closeShareDialog} />
             </Card>
         );
     }
