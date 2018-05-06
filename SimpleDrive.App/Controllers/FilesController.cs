@@ -7,12 +7,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SimpleDrive.App.DataTransferObjects;
 using SimpleDrive.App.Extensions;
+using SimpleDrive.App.IntermediateModels;
 using SimpleDrive.App.Options;
 using SimpleDrive.DAL;
+using SimpleDrive.DAL.Enumerations;
 using SimpleDrive.DAL.Interfaces;
+using SimpleDrive.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SimpleDrive.App.Controllers
@@ -37,16 +41,46 @@ namespace SimpleDrive.App.Controllers
             _fsOptions = fsOptions.Value;
         }
 
-        // GET api/<controller>
+        // GET api/<controller>/personal
         [Authorize]
-        [HttpGet]
-        public async Task<ActionResult> Get()
+        [HttpGet("personal")]
+        public async Task<ActionResult> GetPersonal()
         {
-            var result = _dbContext.Files
+            int userId = User.GetId();
+            var result = await _dbContext.Files
                 .AsNoTracking()
-                .ProjectTo<FileGridInfo>(_mapper.ConfigurationProvider);
+                .Where(f => f.OwnerId == userId)
+                .ProjectTo<FileGridInfo>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            foreach (var dto in result)
+            {
+                dto.IsOwner = true;
+            }
 
             return Ok(result);
+        }
+
+        // GET api/<controller>/shared
+        [Authorize]
+        [HttpGet("shared")]
+        public async Task<ActionResult> GetShared()
+        {
+            int userId = User.GetId();
+            var result = await _dbContext.Files
+                .AsNoTracking()
+                .Include(f => f.ResourcePermissions)
+                .Where(f => f.ResourcePermissions.Any(p => p.UserId == userId))
+                .ProjectTo<FileGridInfoEx>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            foreach (var dto in result)
+            {
+                dto.IsOwner = false;
+                dto.Permission = dto.ResourcePermissions.FirstOrDefault(p => p.UserId == userId)?.PermissionId;
+            }
+
+            return Ok(_mapper.Map<List<FileGridInfo>>(result));
         }
 
         // GET api/<controller>/5
@@ -54,14 +88,87 @@ namespace SimpleDrive.App.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
-            var file = await _dbContext.Files.AsNoTracking().FirstOrDefaultAsync(f => f.Id == id);
+            var file = await _dbContext.Files
+                .AsNoTracking()
+                .Include(f => f.ResourcePermissions)
+                .FirstOrDefaultAsync(f => f.Id == id);
             if (file == null)
             {
                 return BadRequest();
             }
 
+            if (!HasPermission(file))
+            {
+                // neither owner nor shared to
+                return Unauthorized();
+            }
+
             var stream = _fileService.OpenStream(GetFullPath(file.Path));
             return File(stream, file.ContentType, file.Name);
+        }
+        
+        // GET api/<controller>/abcd/share?p=1
+        [Authorize]
+        [HttpGet("{path}/share")]
+        public async Task<ActionResult> Share(string path, [FromQuery(Name = "p")]Permissions permission)
+        {
+            int userId = User.GetId();
+            var file = await _dbContext.Files
+                .Include(f => f.ResourcePermissions)
+                .FirstOrDefaultAsync(f => f.Path == path);
+            if (file == null)
+            {
+                return BadRequest();
+            }
+
+            if (file.OwnerId == userId)
+            {
+                // an owner already has permissions
+                return Ok();
+            }
+
+            var resourcePermission = file.ResourcePermissions.FirstOrDefault(p => p.UserId == userId);
+            if (resourcePermission != null)
+            {
+                // either update existing
+                resourcePermission.PermissionId = permission;
+            }
+            else
+            {
+                // or add a new one
+                file.ResourcePermissions.Add(new ResourcePermission()
+                {
+                    FileId = file.Id,
+                    UserId = userId,
+                    PermissionId = permission
+                });
+            }
+
+            await _dbContext.SaveChangesAsync();
+            return Ok();
+        }
+
+        // GET api/<controller>/5/shareLink?p=1
+        [Authorize]
+        [HttpGet("{id}/shareLink")]
+        public async Task<ActionResult> ShareLink(int id, [FromQuery(Name = "p")]Permissions permission)
+        {
+            int userId = User.GetId();
+            var file = await _dbContext.Files
+                .AsNoTracking()
+                .Include(f => f.ResourcePermissions)
+                .FirstOrDefaultAsync(f => f.Id == id);
+            if (file == null)
+            {
+                return BadRequest();
+            }
+
+            if (!HasPermission(file, Permissions.Full))
+            {
+                return Unauthorized();
+            }
+            
+            return Ok(file.Path);
         }
 
         // POST api/<controller>
@@ -110,10 +217,17 @@ namespace SimpleDrive.App.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, IFormFile file)
         {
-            var entry = await _dbContext.Files.FirstOrDefaultAsync(f => f.Id == id);
+            var entry = await _dbContext.Files
+                .Include(f => f.ResourcePermissions)
+                .FirstOrDefaultAsync(f => f.Id == id);
             if (entry == null || !ModelState.IsValid || file == null || file.Length <= 0)
             {
                 return BadRequest();
+            }
+
+            if (!HasPermission(entry, Permissions.Write))
+            {
+                return Unauthorized();
             }
 
             // TODO: add transaction
@@ -136,10 +250,17 @@ namespace SimpleDrive.App.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var file = await _dbContext.Files.FirstOrDefaultAsync(f => f.Id == id);
+            var file = await _dbContext.Files
+                .Include(f => f.ResourcePermissions)
+                .FirstOrDefaultAsync(f => f.Id == id);
             if (file == null)
             {
                 return BadRequest();
+            }
+            
+            if (!HasPermission(file, Permissions.Full))
+            {
+                return Unauthorized();
             }
 
             await _fileService.Remove(GetFullPath(file.Path));
@@ -151,6 +272,13 @@ namespace SimpleDrive.App.Controllers
         private string GetFullPath(string path)
         {
             return Path.Combine(_fsOptions.StoreDirectory, path);
+        }
+
+        private bool HasPermission(DAL.Models.File file, Permissions? permission = null)
+        {
+            int userId = User.GetId();
+            return file.OwnerId == userId
+                || file.ResourcePermissions.Any(p => p.UserId == userId && (permission == null || p.PermissionId >= permission));
         }
     }
 }

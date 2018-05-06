@@ -108,7 +108,7 @@ export default class PersonalFilesPage extends React.Component<PersonalFilesPage
                 </Tooltip>
             </div>
             
-            <FileGridComponent files={this.state.files} onDeleted={this.deleteFile} enableSharing={true} />
+            <FileGridComponent files={this.state.files} onDeleted={this.deleteFile} />
         </div>;
     }
 }

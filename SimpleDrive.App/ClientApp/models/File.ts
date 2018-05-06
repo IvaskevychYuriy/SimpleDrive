@@ -1,3 +1,5 @@
+import { PermissionTypes } from "./enumerations/PermissionTypes";
+
 export default class File {
     constructor (raw: Partial<File>) {
         Object.assign(this, raw);        
@@ -10,9 +12,11 @@ export default class File {
     id: number;
     uri: string;
     name: string;
-    path: string;
     contentType: string;
     createdTimestamp: Date;
     updatedTimestamp: Date;
     ownerId: number;
+
+    isOwner: boolean;
+    permission: PermissionTypes;
 } 

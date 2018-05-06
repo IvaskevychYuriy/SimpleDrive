@@ -2,7 +2,7 @@ import * as React from "react";
 import { Dialog, DialogTitle, List, FormControl, InputLabel, Select, MenuItem, Input, FormHelperText, TextField, Tooltip, IconButton, Button } from "material-ui";
 import { PermissionTypes } from "../models/enumerations/PermissionTypes";
 import { ResourcePermission } from "../models/ResourcePermission";
-import fileService from "../services/FileService";
+import sharingService from "../services/SharingService";
 import File from "../models/File";
 import ContentCopyIcon from "mdi-react/ContentCopyIcon";
 
@@ -67,24 +67,32 @@ export default class FileShareDialog extends React.Component<FileShareDialogProp
     constructor(props: FileShareDialogProps) {
         super(props);
         
-        this.state = this.createState(PermissionTypes.Read);
+        this.state = {
+            shareLink: '',
+            permission: 0,
+            permissionData: permissionsData[0],
+        }; 
     }
 
-    private handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    async componentDidMount() {
+        this.setState(await this.createState(PermissionTypes.Read));
+    }
+
+    private handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const intId = Number(event.target.value);
-        this.setState(this.createState(intId));
+        this.setState(await this.createState(intId));
     }
 
-    private createState(permissionId: PermissionTypes): FileShareDialogState {
-        return {
-            shareLink: fileService.getSharingLink(this.props.file, permissionId),
-            permission: permissionId,
-            permissionData: permissionsData.find(p => p.value == permissionId)
-        };
-    }
-
-    private copyShareLink = () => {
-        document.execCommand('copy');
+    private async createState(permissionId: PermissionTypes): Promise<FileShareDialogState> {
+        if (this.props.isOpen) {
+            return {
+                shareLink: await sharingService.getSharingLink(this.props.file, permissionId),
+                permission: permissionId,
+                permissionData: permissionsData.find(p => p.value == permissionId)
+            };
+        } else {
+            return this.state;
+        }
     }
 
     render() {  

@@ -2,6 +2,8 @@ import * as React from 'react';
 import Hidden from 'material-ui/Hidden';
 import { Route } from 'react-router-dom';
 import { Menu } from './Menu';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // wtf
 
 export interface LayoutProps {
     children?: React.ReactNode;
@@ -31,6 +33,14 @@ export class Layout extends React.Component<LayoutProps, {}> {
                 <div style={bodyDiv}>
                     { this.props.children }
                 </div>
+                <ToastContainer
+                    position="bottom-center"
+                    autoClose={2000}
+                    hideProgressBar
+                    closeOnClick
+                    pauseOnVisibilityChange
+                    draggable
+                    pauseOnHover />
             </div>
         );
     }

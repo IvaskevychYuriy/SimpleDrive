@@ -49,11 +49,18 @@ export default class PersonalFilesPage extends React.Component<PersonalFilesPage
             files: await fileService.listShared()
         });
     }
+    
+    private deleteFile = async (file: File) => {
+        await fileService.delete(file.id);
+        this.setState({
+            files: this.state.files.filter(f => f.id !== file.id)
+        });
+    }
 
     render() {
         return (
             <div style={divStyle}>
-                <FileGridComponent files={this.state.files} />
+                <FileGridComponent files={this.state.files} onDeleted={this.deleteFile}/>
             </div>
         );
     }

@@ -1,17 +1,15 @@
 import http from "./core/http";
 import { AxiosResponse } from "axios";
 import File from '../models/File';
-import { PermissionTypes } from "../models/enumerations/PermissionTypes";
 
 class FileService {
     async listPersonal(): Promise<File[]> {
-        const response = await http.get<File[]>('files');
+        const response = await http.get<File[]>('files/personal');
         return this.mapToFiles(response);
     }
     
-    // mocked
     async listShared(): Promise<File[]> {
-        const response = await http.get<File[]>('files');
+        const response = await http.get<File[]>('files/shared');
         return this.mapToFiles(response);
     }
 
@@ -36,10 +34,6 @@ class FileService {
 
     async delete(fileId: number) {
         await http.delete(`files/${fileId}`);
-    }
-
-    getSharingLink(file: File, permission: PermissionTypes): string {
-        return `${location.origin}/share?id=${file.path}&p=${permission}`;
     }
 
     private mapToFiles = (response: AxiosResponse<File[]>) => response.data.map(x => new File(x));

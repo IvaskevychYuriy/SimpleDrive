@@ -16,8 +16,7 @@ import { PermissionTypes } from '../models/enumerations/PermissionTypes';
 
 interface FileProps {
     file: FileModel,
-    onDeleted?: (file: FileModel) => Promise<void>,
-    enableSharing?: boolean
+    onDeleted?: (file: FileModel) => Promise<void>
 }
 
 interface FileState {
@@ -45,13 +44,13 @@ export default class File extends React.Component<FileProps, FileState> {
     }
 
     private onDeleteClicked = async (e: React.MouseEvent<HTMLButtonElement>) => {
-        if (this.props.onDeleted) {
+        if (this.props.onDeleted && this.hasPermission(PermissionTypes.Full)) {
             await this.props.onDeleted(this.props.file);
         }
     }
     
     private onShareClicked = async (e: React.MouseEvent<HTMLButtonElement>) => {
-        if (this.props.enableSharing) {
+        if (this.hasPermission(PermissionTypes.Full)) {
             this.setState({
                 openShareDialog: true
             });
@@ -62,6 +61,11 @@ export default class File extends React.Component<FileProps, FileState> {
         this.setState({
             openShareDialog: false
         });
+    }
+
+    private hasPermission(permission?: PermissionTypes) {
+        return this.props.file.isOwner
+            || (permission == null || this.props.file.permission >= permission)
     }
 
     render() {
@@ -77,7 +81,7 @@ export default class File extends React.Component<FileProps, FileState> {
                 </CardContent>
 
                 <CardActions style={actionsContainerStyle}>
-                    {this.props.onDeleted 
+                    {this.hasPermission(PermissionTypes.Full)
                         ? <Tooltip title="Delete">
                             <IconButton onClick={this.onDeleteClicked}>
                                 <DeleteIcon />
@@ -91,7 +95,7 @@ export default class File extends React.Component<FileProps, FileState> {
                         </IconButton>
                     </Tooltip>
 
-                    {this.props.enableSharing 
+                    {this.hasPermission(PermissionTypes.Full)
                         ? <Tooltip title="Share">
                             <IconButton onClick={this.onShareClicked}>
                                 <ShareIcon />
