@@ -3,7 +3,7 @@ import Hidden from 'material-ui/Hidden';
 import { Route } from 'react-router-dom';
 import { Menu } from './Menu';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; // wtf
+import 'react-toastify/dist/ReactToastify.css';
 
 export interface LayoutProps {
     children?: React.ReactNode;

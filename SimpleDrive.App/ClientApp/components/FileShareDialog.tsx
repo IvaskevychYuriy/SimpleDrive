@@ -1,10 +1,9 @@
 import * as React from "react";
-import { Dialog, DialogTitle, List, FormControl, InputLabel, Select, MenuItem, Input, FormHelperText, TextField, Tooltip, IconButton, Button } from "material-ui";
+import { Dialog, DialogTitle, FormControl, InputLabel, Select, MenuItem, Input, FormHelperText, TextField } from "material-ui";
 import { PermissionTypes } from "../models/enumerations/PermissionTypes";
 import { ResourcePermission } from "../models/ResourcePermission";
 import sharingService from "../services/SharingService";
 import File from "../models/File";
-import ContentCopyIcon from "mdi-react/ContentCopyIcon";
 
 interface FileShareDialogProps {
     isOpen: boolean;
