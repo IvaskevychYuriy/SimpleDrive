@@ -22,6 +22,8 @@ namespace SimpleDrive.DAL.Models
             ResourcePermissions = new HashSet<ResourcePermission>();
         }
 
+        public long? QuotaAllowed { get; set; }
+
         public virtual ICollection<File> Files { get; set; }
 
         public virtual ICollection<ResourcePermission> ResourcePermissions { get; set; }

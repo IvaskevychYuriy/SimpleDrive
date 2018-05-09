@@ -33,11 +33,27 @@ namespace SimpleDrive.App
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string connectionString = Configuration.GetConnectionString("ApplicationDbContext");
+            bool isPostgres = false;
+            if (connectionString.Contains("postgres"))
+            {
+                isPostgres = true;
+                services.AddEntityFrameworkNpgsql();
+            }
+
             if (Environment.EnvironmentName == EnvironmentOptions.TestingName)
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
                     {
-                        options.UseSqlServer(Configuration.GetConnectionString("ApplicationDbContext"));
+                        if (isPostgres)
+                        {
+                            options.UseNpgsql(connectionString);
+                        }
+                        else
+                        {
+                            options.UseSqlServer(connectionString);
+                        }
+
                         options.ConfigureWarnings(cfg => cfg.Ignore(RelationalEventId.AmbientTransactionWarning));
                     },
                     ServiceLifetime.Singleton
@@ -46,7 +62,17 @@ namespace SimpleDrive.App
             else
             {
                 services.AddDbContextPool<ApplicationDbContext>(
-                    options => options.UseSqlServer(Configuration.GetConnectionString("ApplicationDbContext"))
+                    options =>
+                    {
+                        if (isPostgres)
+                        {
+                            options.UseNpgsql(connectionString);
+                        }
+                        else
+                        {
+                            options.UseSqlServer(connectionString);
+                        }
+                    }
                 );
             }
 

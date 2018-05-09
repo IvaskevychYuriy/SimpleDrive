@@ -18,9 +18,11 @@ namespace SimpleDrive.DAL.Models
         [Required]
         [StringLength(255)]
         public string Path { get; set; }
-        
+
+        public long Length { get; set; }
+
         public string ContentType { get; set; }
-        
+
         public DateTime CreatedTimestamp { get; set; }
 
         public DateTime UpdatedTimestamp { get; set; }
