@@ -9,6 +9,7 @@ using SimpleDrive.App.DataTransferObjects;
 using SimpleDrive.App.Extensions;
 using SimpleDrive.App.IntermediateModels;
 using SimpleDrive.App.Options;
+using SimpleDrive.App.Models;
 using SimpleDrive.DAL;
 using SimpleDrive.DAL.Enumerations;
 using SimpleDrive.DAL.Interfaces;
@@ -27,7 +28,7 @@ namespace SimpleDrive.App.Controllers
         private readonly ApplicationDbContext _dbContext;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
-        private readonly FileSystemOptions _fsOptions; 
+        private readonly FileSystemOptions _fsOptions;
 
         public FilesController(
             ApplicationDbContext dbContext,
@@ -39,6 +40,21 @@ namespace SimpleDrive.App.Controllers
             _fileService = fileService;
             _mapper = mapper;
             _fsOptions = fsOptions.Value;
+        }
+
+        [Authorize(Roles = Constants.RoleNames.AdminRoleName)]
+        [HttpPut("quota")]
+        public async Task<ActionResult> ChangeQuota([FromBody]QuotaChangeDTO request)
+        {
+            var user = await _dbContext.Users.FindAsync(request.UserId);
+            if (user == null)
+            {
+                return NotFound($"User with {nameof(request.UserId)} = {request.UserId} was not found");
+            }
+
+            user.QuotaAllowed = request.QuotaAllowed;
+            await _dbContext.SaveChangesAsync();
+            return Ok();
         }
 
         // GET api/<controller>/personal
@@ -106,7 +122,7 @@ namespace SimpleDrive.App.Controllers
             var stream = _fileService.OpenStream(GetFullPath(file.Path));
             return File(stream, file.ContentType, file.Name);
         }
-        
+
         // GET api/<controller>/abcd/share?p=1
         [Authorize]
         [HttpGet("{path}/share")]
@@ -167,7 +183,7 @@ namespace SimpleDrive.App.Controllers
             {
                 return Unauthorized();
             }
-            
+
             return Ok(file.Path);
         }
 
@@ -184,13 +200,21 @@ namespace SimpleDrive.App.Controllers
             // TODO: add transaction
             var now = DateTime.UtcNow;
             int userId = User.GetId();
+
+            if (!User.IsInRole(Constants.RoleNames.AdminRoleName))
+            {
+                var quotaInfo = GetQuotaInfo(userId);
+                long additional = files.Sum(x => x.Length);
+                long? difference = quotaInfo.Difference(additional);
+
+                if (difference < 0)
+                {
+                    return BadRequest($"Exceeded allowed quota of {quotaInfo.QuotaAllowed} by {-difference} bytes");
+                }
+            }
+
             foreach (var file in files)
             {
-                if (file == null || file.Length <= 0)
-                {
-                    continue;
-                }
-                
                 string path = _fileService.GenerateUniquePath();
                 using (var stream = file.OpenReadStream())
                 {
@@ -202,6 +226,7 @@ namespace SimpleDrive.App.Controllers
                     Name = file.GetFileName(),
                     ContentType = file.ContentType,
                     Path = path,
+                    Length = file.Length,
                     OwnerId = userId,
                     CreatedTimestamp = now,
                     UpdatedTimestamp = now
@@ -230,6 +255,17 @@ namespace SimpleDrive.App.Controllers
                 return Unauthorized();
             }
 
+            if (!User.IsInRole(Constants.RoleNames.AdminRoleName))
+            {
+                var quotaInfo = GetQuotaInfo(User.GetId());
+                long? difference = quotaInfo.Difference(file.Length);
+
+                if (difference < 0)
+                {
+                    return BadRequest($"Exceeded allowed quota of {quotaInfo.QuotaAllowed} by {-difference} bytes");
+                }
+            }
+
             // TODO: add transaction
             using (var stream = file.OpenReadStream())
             {
@@ -237,6 +273,7 @@ namespace SimpleDrive.App.Controllers
             }
 
             entry.Name = file.GetFileName();
+            entry.Length = file.Length;
             entry.ContentType = file.ContentType;
             entry.OwnerId = User.GetId();
             entry.UpdatedTimestamp = DateTime.UtcNow;
@@ -257,7 +294,7 @@ namespace SimpleDrive.App.Controllers
             {
                 return BadRequest();
             }
-            
+
             if (!HasPermission(file, Permissions.Full))
             {
                 return Unauthorized();
@@ -267,6 +304,18 @@ namespace SimpleDrive.App.Controllers
             _dbContext.Files.Remove(file);
             await _dbContext.SaveChangesAsync();
             return Ok();
+        }
+
+        private QuotaInfo GetQuotaInfo(int userId)
+        {
+            return _dbContext.Users
+                .Where(u => u.Id == userId)
+                .Select(u => new QuotaInfo
+                {
+                    QuotaAllowed = u.QuotaAllowed,
+                    QuotaUsed = u.Files.Sum(f => f.Length)
+                })
+                .Single();
         }
 
         private string GetFullPath(string path)
