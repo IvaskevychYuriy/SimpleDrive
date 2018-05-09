@@ -25,7 +25,7 @@ export class Menu extends React.Component<RouteComponentProps<{}>, MenuState> {
         return (
             <>
                 <NavMenu {...props} />
-                { this.state.isLoggedIn ? <SideMenu {...props} /> : null }
+                <SideMenu {...props} />
             </>
         );
     }

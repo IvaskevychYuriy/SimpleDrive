@@ -4,6 +4,7 @@ import { PermissionTypes } from "../models/enumerations/PermissionTypes";
 import { ResourcePermission } from "../models/ResourcePermission";
 import sharingService from "../services/SharingService";
 import File from "../models/File";
+import { FileShareModel } from "../models/FileShareModel";
 
 interface FileShareDialogProps {
     isOpen: boolean;
@@ -15,6 +16,7 @@ interface FileShareDialogState {
     shareLink: string;
     permission: PermissionTypes;
     permissionData: PermissionData;
+    fileShareModel: FileShareModel;
 }
 
 interface PermissionData {
@@ -70,6 +72,9 @@ export default class FileShareDialog extends React.Component<FileShareDialogProp
             shareLink: '',
             permission: 0,
             permissionData: permissionsData[0],
+            fileShareModel: {
+                isPubliclyVisible: props.file.isPubliclyVisible
+            }
         }; 
     }
 
@@ -87,7 +92,8 @@ export default class FileShareDialog extends React.Component<FileShareDialogProp
             return {
                 shareLink: await sharingService.getSharingLink(this.props.file, permissionId),
                 permission: permissionId,
-                permissionData: permissionsData.find(p => p.value == permissionId)
+                permissionData: permissionsData.find(p => p.value == permissionId),
+                fileShareModel: this.state.fileShareModel
             };
         } else {
             return this.state;
@@ -117,6 +123,12 @@ export default class FileShareDialog extends React.Component<FileShareDialogProp
                         style={linkStyle}
                         disabled>
                     </TextField>
+                </div>
+                <div>
+                    <FormControl style={permissionStyle}>
+                        <InputLabel htmlFor="permission-type">Publicly visible</InputLabel>
+                        <Input type="checkbox" defaultChecked={this.props.file.isPubliclyVisible} />
+                    </FormControl>
                 </div>
             </Dialog>
         );

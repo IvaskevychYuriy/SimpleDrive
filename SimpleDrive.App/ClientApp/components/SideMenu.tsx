@@ -16,7 +16,7 @@ import FolderSharedIcon from '@material-ui/icons/FolderShared';
 import authenticationService from '../services/AuthenticationService';
 import RoleNames from '../constants/RoleNames';
 
-const drawerWidth = 200;
+const drawerWidth = 220;
 
 const drawerPaper: React.CSSProperties = {
     position: 'relative',
@@ -40,6 +40,17 @@ export class SideMenu extends React.Component<MenuRouterProps<{}>, SideMenuState
     constructor(props: MenuRouterProps<{}>) {
         super(props);
     }
+
+    private guestItems = (
+        <div>
+            <ListItem button onClick={() => this.props.history.push('/public')}>
+                <ListItemIcon>
+                    <FolderIcon />
+                </ListItemIcon>
+                <ListItemText primary="Public Documents" />
+            </ListItem>
+        </div>
+    )
 
     private mainItems = (
         <div>
@@ -76,6 +87,16 @@ export class SideMenu extends React.Component<MenuRouterProps<{}>, SideMenuState
         return (
             <Drawer variant="permanent" style={drawerPaper}>
                 <div style={emptyHeaderPlaceholder}></div>
+
+                <List style={drawer}>{this.guestItems}</List>
+                <Divider />
+
+                {this.props.isLoggedIn
+                ? (<>
+                        <List style={drawer}>{this.mainItems}</List>
+                        <Divider />
+                   </>)
+                : null }
                 <List style={drawer}>{this.mainItems}</List>
                 <Divider />
                 {
@@ -87,7 +108,6 @@ export class SideMenu extends React.Component<MenuRouterProps<{}>, SideMenuState
                     : null
                 }
             </Drawer>
-
         );
     }
 }
