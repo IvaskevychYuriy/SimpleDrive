@@ -13,6 +13,11 @@ class FileService {
         return this.mapToFiles(response);
     }
 
+    async listAll(): Promise<File[]> {
+        const response = await http.get<File[]>('files/all');
+        return this.mapToFiles(response);
+    }
+
     async upload(files: FileList, progress: (percentCompleted: number) => void) {
         const formData = new FormData();
 
