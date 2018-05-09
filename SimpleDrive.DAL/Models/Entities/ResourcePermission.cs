@@ -12,8 +12,6 @@ namespace SimpleDrive.DAL.Models
 
        public virtual User User { get; set; }
 
-       public virtual Permission Permission { get; set; }
-
        public virtual File File { get; set; }
     }
 }

@@ -8,8 +8,6 @@ namespace SimpleDrive.DAL
     {
         public DbSet<File> Files { get; set; }
 
-        public DbSet<Permission> Permissions { get; set; }
-
         public DbSet<ResourcePermission> ResourcePermissions { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -37,12 +35,6 @@ namespace SimpleDrive.DAL
                 .HasOne(p => p.File)
                 .WithMany(f => f.ResourcePermissions)
                 .HasForeignKey(p => p.FileId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Entity<ResourcePermission>()
-                .HasOne(p => p.Permission)
-                .WithMany(p => p.ResourcePermissions)
-                .HasForeignKey(p => p.PermissionId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

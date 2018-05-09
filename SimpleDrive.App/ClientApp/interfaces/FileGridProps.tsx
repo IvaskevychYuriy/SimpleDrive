@@ -2,5 +2,5 @@ import File from '../models/File';
 
 export interface FileGridProps {
     files: File[],
-    onDeleted?: (file: File) => Promise<void>
+    onDeleted: (file: File) => Promise<void>
 }

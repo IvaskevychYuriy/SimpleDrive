@@ -6,6 +6,7 @@ import fileService from '../services/FileService';
 import { LinearProgress } from 'material-ui/Progress';
 import IconButton from 'material-ui/IconButton';
 import UploadIcon from 'mdi-react/UploadIcon';
+import Tooltip from 'material-ui/Tooltip';
 
 export interface PersonalFilesPageProps {
 }
@@ -100,9 +101,11 @@ export default class PersonalFilesPage extends React.Component<PersonalFilesPage
                 <input type="file" ref={ref => this.inputFileRef = ref} onChange={this.onFileChanged} />
             </label>
             <div style={uploadBtnContainer}>
-                <IconButton onClick={e => this.inputFileRef.click()} color="inherit">
-                    <UploadIcon className="upload-btn" size={32} />
-                </IconButton>
+                <Tooltip title="Upload file">
+                    <IconButton onClick={e => this.inputFileRef.click()} color="inherit">
+                        <UploadIcon className="upload-btn" size={32} />
+                    </IconButton>
+                </Tooltip>
             </div>
             
             <FileGridComponent files={this.state.files} onDeleted={this.deleteFile} />

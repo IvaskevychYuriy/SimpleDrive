@@ -4,13 +4,12 @@ import File from '../models/File';
 
 class FileService {
     async listPersonal(): Promise<File[]> {
-        const response = await http.get<File[]>('files');
+        const response = await http.get<File[]>('files/personal');
         return this.mapToFiles(response);
     }
     
-    // mocked
     async listShared(): Promise<File[]> {
-        const response = await http.get<File[]>('files');
+        const response = await http.get<File[]>('files/shared');
         return this.mapToFiles(response);
     }
 
@@ -34,7 +33,6 @@ class FileService {
     }
 
     async delete(fileId: number) {
-
         await http.delete(`files/${fileId}`);
     }
 
