@@ -13,6 +13,8 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import StarIcon from '@material-ui/icons/Star';
 import FolderIcon from '@material-ui/icons/Folder';
 import FolderSharedIcon from '@material-ui/icons/FolderShared';
+import authenticationService from '../services/AuthenticationService';
+import RoleNames from '../constants/RoleNames';
 
 const drawerWidth = 200;
 
@@ -56,13 +58,36 @@ export class SideMenu extends React.Component<MenuRouterProps<{}>, SideMenuState
         </div>
     );
 
-    render () {
+    private adminItems = (
+        <div>
+            <ListItem button onClick={() => this.props.history.push('/allfiles')}>
+                <ListItemIcon>
+                    <FolderIcon />
+                </ListItemIcon>
+                <ListItemText primary="All Documents" />
+            </ListItem>
+        </div>
+    );
+
+    render() {
+        const roles = authenticationService.userProfile.roles;
+        const isAdmin = roles && roles.indexOf(RoleNames.adminRole) !== -1;
+
         return (
             <Drawer variant="permanent" style={drawerPaper}>
                 <div style={emptyHeaderPlaceholder}></div>
                 <List style={drawer}>{this.mainItems}</List>
                 <Divider />
+                {
+                    isAdmin 
+                    ? ( <React.Fragment>
+                            <List style={drawer}>{this.adminItems}</List>
+                            <Divider />
+                        </React.Fragment>)
+                    : null
+                }
             </Drawer>
+
         );
     }
 }

@@ -47,14 +47,14 @@ export class NavMenu extends React.Component<MenuRouterProps<{}>, NavMenuState> 
                                     Logout
                                 </Button>
                             ) : (
-                                <>
+                                <React.Fragment>
                                     <Button onClick={() => this.props.history.push('/login')} color="inherit">
                                         Login
                                     </Button>
                                     <Button onClick={() => this.props.history.push('/register')} color="inherit">
                                         Register
                                     </Button>
-                                </>
+                                </React.Fragment>
                             )
                     }
                 </Toolbar>

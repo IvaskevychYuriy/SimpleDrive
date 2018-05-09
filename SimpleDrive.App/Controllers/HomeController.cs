@@ -89,7 +89,9 @@ namespace SimpleDrive.App.Controllers
                 var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, true);
                 if (result.Succeeded)
                 {
-                    return StatusCode(code, _mapper.Map<UserProfileDTO>(user));
+                    var mappedUser =  _mapper.Map<UserProfileDTO>(user);
+                    mappedUser.Roles = await _userManager.GetRolesAsync(user);
+                    return StatusCode(code, mappedUser);
                 }
             }
 

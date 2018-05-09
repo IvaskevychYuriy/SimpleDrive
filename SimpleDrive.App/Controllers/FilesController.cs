@@ -83,6 +83,26 @@ namespace SimpleDrive.App.Controllers
             return Ok(_mapper.Map<List<FileGridInfo>>(result));
         }
 
+        // GET api/<controller>/all
+        [Authorize(Roles = Constants.RoleNames.AdminRoleName)]
+        [HttpGet("all")]
+        public async Task<ActionResult> GetAll()
+        {
+            int userId = User.GetId();
+            var result = await _dbContext.Files
+                .AsNoTracking()
+                .ProjectTo<FileGridInfoEx>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            foreach (var dto in result)
+            {
+                dto.IsOwner = dto.OwnerId == userId;
+                dto.Permission = Permissions.Full;
+            }
+
+            return Ok(_mapper.Map<List<FileGridInfo>>(result));
+        }
+
         // GET api/<controller>/5
         [Authorize]
         [HttpGet("{id}")]
