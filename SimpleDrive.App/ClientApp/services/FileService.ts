@@ -3,6 +3,11 @@ import { AxiosResponse } from "axios";
 import File from '../models/File';
 
 class FileService {
+    async listPublic(): Promise<File[]> {
+        const response = await http.get<File[]>('files/public');
+        return this.mapToFiles(response);
+    }
+
     async listPersonal(): Promise<File[]> {
         const response = await http.get<File[]>('files/personal');
         return this.mapToFiles(response);

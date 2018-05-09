@@ -5,3 +5,7 @@
 div[role=tooltip] {
     font-size: 1.2rem;
 }
+
+.flex-infinite-spacer {
+    flex: 9999;
+}

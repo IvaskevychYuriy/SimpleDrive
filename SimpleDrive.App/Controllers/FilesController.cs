@@ -57,6 +57,18 @@ namespace SimpleDrive.App.Controllers
             return Ok();
         }
 
+        // GET api/<controller>/public
+        [HttpGet("public")]
+        public async Task<ActionResult> GetPublic()
+        {
+            var result = _dbContext.Files
+                .AsNoTracking()
+                .Where(f => f.IsPubliclyVisible)
+                .ProjectTo<FileGridInfo>(_mapper.ConfigurationProvider);
+
+            return Ok(result);
+        }
+
         // GET api/<controller>/personal
         [Authorize]
         [HttpGet("personal")]
@@ -205,6 +217,27 @@ namespace SimpleDrive.App.Controllers
             }
 
             return Ok(file.Path);
+        }
+        
+        // POST api/<controller>/sharing
+        [HttpPost("sharing")]
+        public async Task<ActionResult> SharingOptions([FromBody] FileShareModel model)
+        {
+            if (!ModelState.IsValid || model == null)
+            {
+                return BadRequest();
+            }
+
+            var file = await _dbContext.Files.FindAsync(model.FileId);
+            if (file == null)
+            {
+                return BadRequest();
+            }
+
+            file.IsPubliclyVisible = model.IsPubliclyVisible;
+            await _dbContext.SaveChangesAsync();
+
+            return Ok();
         }
 
         // POST api/<controller>

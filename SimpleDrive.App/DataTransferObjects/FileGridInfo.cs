@@ -17,6 +17,8 @@ namespace SimpleDrive.App.DataTransferObjects
 
         public DateTime UpdatedTimestamp { get; set; }
 
+        public bool IsPubliclyVisible { get; set; }
+
         public bool IsOwner { get; set; }
 
         public Permissions? Permission { get; set; }

@@ -15,6 +15,7 @@ import FolderIcon from '@material-ui/icons/Folder';
 import FolderSharedIcon from '@material-ui/icons/FolderShared';
 import authenticationService from '../services/AuthenticationService';
 import RoleNames from '../constants/RoleNames';
+import { UserProfile } from '../models/UserProfile';
 
 const drawerWidth = 220;
 
@@ -81,7 +82,8 @@ export class SideMenu extends React.Component<MenuRouterProps<{}>, SideMenuState
     );
 
     render() {
-        const roles = authenticationService.userProfile.roles;
+        const roles = (authenticationService.userProfile || new UserProfile()).roles || [];
+        const isUser = roles && roles.indexOf(RoleNames.userRole) !== -1;
         const isAdmin = roles && roles.indexOf(RoleNames.adminRole) !== -1;
 
         return (
@@ -91,14 +93,15 @@ export class SideMenu extends React.Component<MenuRouterProps<{}>, SideMenuState
                 <List style={drawer}>{this.guestItems}</List>
                 <Divider />
 
-                {this.props.isLoggedIn
-                ? (<>
-                        <List style={drawer}>{this.mainItems}</List>
-                        <Divider />
-                   </>)
-                : null }
-                <List style={drawer}>{this.mainItems}</List>
-                <Divider />
+                {
+                    isUser 
+                    ? ( <React.Fragment>
+                            <List style={drawer}>{this.mainItems}</List>
+                            <Divider />
+                        </React.Fragment>)
+                    : null
+                }
+
                 {
                     isAdmin 
                     ? ( <React.Fragment>

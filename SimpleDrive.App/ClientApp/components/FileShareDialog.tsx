@@ -1,10 +1,11 @@
 import * as React from "react";
-import { Dialog, DialogTitle, FormControl, InputLabel, Select, MenuItem, Input, FormHelperText, TextField } from "material-ui";
+import { Dialog, DialogTitle, FormControl, InputLabel, Select, MenuItem, Input, FormHelperText, TextField, Button, Checkbox } from "material-ui";
 import { PermissionTypes } from "../models/enumerations/PermissionTypes";
 import { ResourcePermission } from "../models/ResourcePermission";
 import sharingService from "../services/SharingService";
 import File from "../models/File";
 import { FileShareModel } from "../models/FileShareModel";
+import { toast } from 'react-toastify';
 
 interface FileShareDialogProps {
     isOpen: boolean;
@@ -16,7 +17,7 @@ interface FileShareDialogState {
     shareLink: string;
     permission: PermissionTypes;
     permissionData: PermissionData;
-    fileShareModel: FileShareModel;
+    isPubliclyVisible: boolean;
 }
 
 interface PermissionData {
@@ -72,9 +73,7 @@ export default class FileShareDialog extends React.Component<FileShareDialogProp
             shareLink: '',
             permission: 0,
             permissionData: permissionsData[0],
-            fileShareModel: {
-                isPubliclyVisible: props.file.isPubliclyVisible
-            }
+            isPubliclyVisible: props.file.isPubliclyVisible
         }; 
     }
 
@@ -86,6 +85,12 @@ export default class FileShareDialog extends React.Component<FileShareDialogProp
         const intId = Number(event.target.value);
         this.setState(await this.createState(intId));
     }
+    
+    private handleFileVisibilityChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            isPubliclyVisible: event.target.checked
+        });
+    }
 
     private async createState(permissionId: PermissionTypes): Promise<FileShareDialogState> {
         if (this.props.isOpen) {
@@ -93,14 +98,33 @@ export default class FileShareDialog extends React.Component<FileShareDialogProp
                 shareLink: await sharingService.getSharingLink(this.props.file, permissionId),
                 permission: permissionId,
                 permissionData: permissionsData.find(p => p.value == permissionId),
-                fileShareModel: this.state.fileShareModel
+                isPubliclyVisible: this.state.isPubliclyVisible
             };
         } else {
             return this.state;
         }
     }
 
+    private saveFileShareOptions = async () => {
+        const model: FileShareModel = {
+            fileId: this.props.file.id,
+            isPubliclyVisible: this.state.isPubliclyVisible
+        };
+
+        try {
+            await sharingService.saveShareOptions(model);
+            toast.info(`Successfully made a file ${this.state.isPubliclyVisible ? '' : 'not '}public!`)
+        } catch {
+            toast.error("Could not update sharing options", {autoClose: 5000});
+        }
+    }
+
     render() {  
+        const test: any = {};
+        if (this.state.isPubliclyVisible) {
+            test['checked'] = 'checked';
+        }
+
         return (
             <Dialog open={this.props.isOpen} style={dialogStyle} onClose={this.props.onClose}>
                 <DialogTitle style={dialogTitleStyle}>Generate Share Link</DialogTitle>
@@ -124,10 +148,25 @@ export default class FileShareDialog extends React.Component<FileShareDialogProp
                         disabled>
                     </TextField>
                 </div>
-                <div>
-                    <FormControl style={permissionStyle}>
-                        <InputLabel htmlFor="permission-type">Publicly visible</InputLabel>
-                        <Input type="checkbox" defaultChecked={this.props.file.isPubliclyVisible} />
+                <div style={dialogContentStyle}>
+                    <FormControl >
+                        <InputLabel htmlFor="public-visibility" shrink>Public</InputLabel>
+                        <Checkbox
+                            id="public-visibility"
+                            onChange={this.handleFileVisibilityChange}
+                            checked={this.state.isPubliclyVisible}>
+                        </Checkbox>
+                    </FormControl>
+                </div>
+                <div style={dialogContentStyle}>
+                    <div style={{flex: 10}}></div>
+                    <FormControl >
+                        <Button
+                            variant="raised"
+                            color="primary"
+                            onClick={this.saveFileShareOptions}>
+                            Save
+                    </Button>
                     </FormControl>
                 </div>
             </Dialog>

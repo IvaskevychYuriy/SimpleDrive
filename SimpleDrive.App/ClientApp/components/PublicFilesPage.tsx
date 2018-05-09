@@ -47,7 +47,7 @@ export default class PersonalFilesPage extends React.Component<PersonalFilesPage
 
     async componentDidMount() {
         this.setState({
-            files: await fileService.listShared()
+            files: await fileService.listPublic()
         });
     }
     
