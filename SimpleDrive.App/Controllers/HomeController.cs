@@ -92,7 +92,6 @@ namespace SimpleDrive.App.Controllers
                     var mappedUser =  _mapper.Map<UserProfileDTO>(user);
                     mappedUser.Roles = await _userManager.GetRolesAsync(user);
                     return StatusCode(code, mappedUser);
-
                 }
             }
 

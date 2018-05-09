@@ -14,7 +14,7 @@ import StarIcon from '@material-ui/icons/Star';
 import FolderIcon from '@material-ui/icons/Folder';
 import FolderSharedIcon from '@material-ui/icons/FolderShared';
 import authenticationService from '../services/AuthenticationService';
-
+import RoleNames from '../constants/RoleNames';
 
 const drawerWidth = 200;
 
@@ -57,6 +57,7 @@ export class SideMenu extends React.Component<MenuRouterProps<{}>, SideMenuState
             </ListItem>
         </div>
     );
+
     private adminItems = (
         <div>
             <ListItem button onClick={() => this.props.history.push('/allfiles')}>
@@ -69,22 +70,22 @@ export class SideMenu extends React.Component<MenuRouterProps<{}>, SideMenuState
     );
 
     render() {
-        const isAdmin = authenticationService.userProfile.roles
-            && authenticationService.userProfile.roles.indexOf("Administrator") !== -1;
+        const roles = authenticationService.userProfile.roles;
+        const isAdmin = roles && roles.indexOf(RoleNames.adminRole) !== -1;
+
         return (
             <Drawer variant="permanent" style={drawerPaper}>
                 <div style={emptyHeaderPlaceholder}></div>
                 <List style={drawer}>{this.mainItems}</List>
                 <Divider />
                 {
-                    isAdmin?
-                    (<React.Fragment>
-                        <List style={drawer}>{this.adminItems}</List>
-                        <Divider />
-                        </React.Fragment>
-                    ): null
-                        
-               }
+                    isAdmin 
+                    ? ( <React.Fragment>
+                            <List style={drawer}>{this.adminItems}</List>
+                            <Divider />
+                        </React.Fragment>)
+                    : null
+                }
             </Drawer>
 
         );

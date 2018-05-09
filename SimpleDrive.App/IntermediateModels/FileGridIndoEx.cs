@@ -7,6 +7,7 @@ namespace SimpleDrive.App.IntermediateModels
     public class FileGridInfoEx : FileGridInfo
     {
         public ICollection<ResourcePermission> ResourcePermissions { get; set; }
+
         public int OwnerId { get; set; }
     }
 }

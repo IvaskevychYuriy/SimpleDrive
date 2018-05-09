@@ -82,8 +82,9 @@ namespace SimpleDrive.App.Controllers
 
             return Ok(_mapper.Map<List<FileGridInfo>>(result));
         }
+
         // GET api/<controller>/all
-        [Authorize(Roles =Constants.RoleNames.AdminRoleName)]
+        [Authorize(Roles = Constants.RoleNames.AdminRoleName)]
         [HttpGet("all")]
         public async Task<ActionResult> GetAll()
         {

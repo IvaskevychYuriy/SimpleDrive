@@ -12,7 +12,7 @@ export const routes = <Layout>
     <Route exact path='/share/:fileId/:permission' component={ FileShare } />
     <Route exact path='/files' component={ PersonalFilesPage } />
     <Route exact path='/allfiles' component={ AllFilesPage } />
-    <Route exact path='/shared' component={SharedFilesPage} />
+    <Route exact path='/shared' component={ SharedFilesPage } />
     <Route exact path='/login' component={ Login } />
     <Route exact path='/register' component={ Login } />
 </Layout>;
