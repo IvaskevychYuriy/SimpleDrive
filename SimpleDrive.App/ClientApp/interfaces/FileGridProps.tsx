@@ -1,6 +1,6 @@
-import File from '../models/File';
+import { GridTypes } from '../models/enumerations/GridTypes';
 
 export interface FileGridProps {
-    files: File[],
-    onDeleted: (file: File) => Promise<void>
+    gridType: GridTypes;
+    canUploadNew?: boolean;
 }

@@ -1,26 +1,14 @@
 import http from "./core/http";
 import { AxiosResponse } from "axios";
 import File from '../models/File';
+import { GridTypes } from "../models/enumerations/GridTypes";
 
 class FileService {
-    async listPublic(): Promise<File[]> {
-        const response = await http.get<File[]>('files/public');
-        return this.mapToFiles(response);
-    }
-
-    async listPersonal(): Promise<File[]> {
-        const response = await http.get<File[]>('files/personal');
-        return this.mapToFiles(response);
-    }
     
-    async listShared(): Promise<File[]> {
-        const response = await http.get<File[]>('files/shared');
-        return this.mapToFiles(response);
-    }
-
-    async listAll(): Promise<File[]> {
-        const response = await http.get<File[]>('files/all');
-        return this.mapToFiles(response);
+    async listFiles(gridType: GridTypes): Promise<File[]> {
+        const url = this.getUrlByType(gridType);
+        const response = await http.get<File[]>(url);
+        return response.data.map(x => new File(x));
     }
 
     async upload(files: FileList, progress: (percentCompleted: number) => void) {
@@ -46,7 +34,14 @@ class FileService {
         await http.delete(`files/${fileId}`);
     }
 
-    private mapToFiles = (response: AxiosResponse<File[]>) => response.data.map(x => new File(x));
+    private getUrlByType(gridType: GridTypes): string {
+        switch (gridType) {
+            case GridTypes.Personal: return 'files/personal';
+            case GridTypes.Shared: return 'files/shared';
+            case GridTypes.All: return 'files/all';
+            default: return 'files/public';
+        }
+    }
 }
 
 export default new FileService();

@@ -228,10 +228,17 @@ namespace SimpleDrive.App.Controllers
                 return BadRequest();
             }
 
-            var file = await _dbContext.Files.FindAsync(model.FileId);
+            var file = await _dbContext.Files
+                .Include(f => f.ResourcePermissions)
+                .FirstOrDefaultAsync(f => f.Id == model.FileId);
             if (file == null)
             {
                 return BadRequest();
+            }
+
+            if (!HasPermission(file, Permissions.Full))
+            {
+                return Unauthorized();
             }
 
             file.IsPubliclyVisible = model.IsPubliclyVisible;
@@ -379,7 +386,8 @@ namespace SimpleDrive.App.Controllers
         private bool HasPermission(DAL.Models.File file, Permissions? permission = null)
         {
             int userId = User.GetId();
-            return file.OwnerId == userId
+            return User.IsInRole(Constants.RoleNames.AdminRoleName)
+                || file.OwnerId == userId
                 || file.ResourcePermissions.Any(p => p.UserId == userId && (permission == null || p.PermissionId >= permission));
         }
     }

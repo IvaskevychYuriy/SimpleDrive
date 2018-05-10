@@ -1,18 +1,13 @@
 ﻿import * as React from 'react';
 import { withStyles } from 'material-ui/styles';
 import Drawer from 'material-ui/Drawer';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
 import List from 'material-ui/List';
-import Typography from 'material-ui/Typography';
 import Divider from 'material-ui/Divider';
-import { RouteComponentProps } from 'react-router-dom';
 import { MenuRouterProps } from '../interfaces/MenuRouterProps';
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import StarIcon from '@material-ui/icons/Star';
 import FolderIcon from '@material-ui/icons/Folder';
 import FolderSharedIcon from '@material-ui/icons/FolderShared';
+
 import authenticationService from '../services/AuthenticationService';
 import RoleNames from '../constants/RoleNames';
 import { UserProfile } from '../models/UserProfile';
@@ -37,10 +32,6 @@ interface SideMenuState {
 }  
 
 export class SideMenu extends React.Component<MenuRouterProps<{}>, SideMenuState> {
-
-    constructor(props: MenuRouterProps<{}>) {
-        super(props);
-    }
 
     private guestItems = (
         <div>
