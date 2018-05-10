@@ -9,7 +9,7 @@ import { GridTypes } from './models/enumerations/GridTypes';
 export const routes = <Layout>
     <Route exact path="/" render={(props) => <FileGrid gridType={GridTypes.Public} {...props} />} />
     <Route exact path='/share/:fileId/:permission' component={ FileShare } />
-    <Route exact path='/files' render={(props) => <FileGrid gridType={GridTypes.Personal} {...props} />} />
+    <Route exact path='/files' render={(props) => <FileGrid gridType={GridTypes.Personal} canUploadNew {...props} />} />
     <Route exact path='/allfiles' render={(props) => <FileGrid gridType={GridTypes.All} {...props} />} />
     <Route exact path='/shared' render={(props) => <FileGrid gridType={GridTypes.Shared} {...props} />} />
     <Route exact path='/public' render={(props) => <FileGrid gridType={GridTypes.Public} {...props} />} />
