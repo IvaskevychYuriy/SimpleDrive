@@ -1,22 +1,18 @@
 ﻿import * as React from 'react';
 import { withStyles } from 'material-ui/styles';
 import Drawer from 'material-ui/Drawer';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
 import List from 'material-ui/List';
-import Typography from 'material-ui/Typography';
 import Divider from 'material-ui/Divider';
-import { RouteComponentProps } from 'react-router-dom';
 import { MenuRouterProps } from '../interfaces/MenuRouterProps';
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import StarIcon from '@material-ui/icons/Star';
 import FolderIcon from '@material-ui/icons/Folder';
 import FolderSharedIcon from '@material-ui/icons/FolderShared';
+
 import authenticationService from '../services/AuthenticationService';
 import RoleNames from '../constants/RoleNames';
+import { UserProfile } from '../models/UserProfile';
 
-const drawerWidth = 200;
+const drawerWidth = 220;
 
 const drawerPaper: React.CSSProperties = {
     position: 'relative',
@@ -37,9 +33,16 @@ interface SideMenuState {
 
 export class SideMenu extends React.Component<MenuRouterProps<{}>, SideMenuState> {
 
-    constructor(props: MenuRouterProps<{}>) {
-        super(props);
-    }
+    private guestItems = (
+        <div>
+            <ListItem button onClick={() => this.props.history.push('/public')}>
+                <ListItemIcon>
+                    <FolderIcon />
+                </ListItemIcon>
+                <ListItemText primary="Public Documents" />
+            </ListItem>
+        </div>
+    )
 
     private mainItems = (
         <div>
@@ -70,14 +73,26 @@ export class SideMenu extends React.Component<MenuRouterProps<{}>, SideMenuState
     );
 
     render() {
-        const roles = authenticationService.userProfile.roles;
+        const roles = (authenticationService.userProfile || new UserProfile()).roles || [];
+        const isUser = roles && roles.indexOf(RoleNames.userRole) !== -1;
         const isAdmin = roles && roles.indexOf(RoleNames.adminRole) !== -1;
 
         return (
             <Drawer variant="permanent" style={drawerPaper}>
                 <div style={emptyHeaderPlaceholder}></div>
-                <List style={drawer}>{this.mainItems}</List>
+
+                <List style={drawer}>{this.guestItems}</List>
                 <Divider />
+
+                {
+                    isUser 
+                    ? ( <React.Fragment>
+                            <List style={drawer}>{this.mainItems}</List>
+                            <Divider />
+                        </React.Fragment>)
+                    : null
+                }
+
                 {
                     isAdmin 
                     ? ( <React.Fragment>
@@ -87,7 +102,6 @@ export class SideMenu extends React.Component<MenuRouterProps<{}>, SideMenuState
                     : null
                 }
             </Drawer>
-
         );
     }
 }

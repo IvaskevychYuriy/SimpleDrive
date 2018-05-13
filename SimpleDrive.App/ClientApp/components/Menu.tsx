@@ -25,7 +25,7 @@ export class Menu extends React.Component<RouteComponentProps<{}>, MenuState> {
         return (
             <>
                 <NavMenu {...props} />
-                { this.state.isLoggedIn ? <SideMenu {...props} /> : null }
+                <SideMenu {...props} />
             </>
         );
     }
@@ -42,5 +42,10 @@ export class Menu extends React.Component<RouteComponentProps<{}>, MenuState> {
         this.setState({
             isLoggedIn
         });
+
+        // if not logged in and not on public files page -> redirect there
+        if (!isLoggedIn && this.props.location.pathname !== '/public') {
+            this.props.history.push('/public');
+        }
     }
 }

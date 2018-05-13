@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace SimpleDrive.DAL.Models
@@ -28,6 +29,9 @@ namespace SimpleDrive.DAL.Models
         public DateTime UpdatedTimestamp { get; set; }
 
         public int OwnerId { get; set; }
+        
+        [DefaultValue(false)]
+        public bool IsPubliclyVisible { get; set; }
 
         public virtual User Owner { get; set; }
 

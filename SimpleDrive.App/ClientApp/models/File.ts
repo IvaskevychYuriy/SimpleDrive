@@ -18,5 +18,6 @@ export default class File {
     ownerId: number;
 
     isOwner: boolean;
+    isPubliclyVisible: boolean;
     permission: PermissionTypes;
 } 
