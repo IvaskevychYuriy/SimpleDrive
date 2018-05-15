@@ -41,22 +41,7 @@ namespace SimpleDrive.App.Controllers
             _mapper = mapper;
             _fsOptions = fsOptions.Value;
         }
-
-        [Authorize(Roles = Constants.RoleNames.AdminRoleName)]
-        [HttpPut("quota")]
-        public async Task<ActionResult> ChangeQuota([FromBody]QuotaChangeDTO request)
-        {
-            var user = await _dbContext.Users.FindAsync(request.UserId);
-            if (user == null)
-            {
-                return NotFound($"User with {nameof(request.UserId)} = {request.UserId} was not found");
-            }
-
-            user.QuotaAllowed = request.QuotaAllowed;
-            await _dbContext.SaveChangesAsync();
-            return Ok();
-        }
-
+        
         // GET api/<controller>/public
         [HttpGet("public")]
         public async Task<ActionResult> GetPublic()
@@ -132,7 +117,6 @@ namespace SimpleDrive.App.Controllers
         }
 
         // GET api/<controller>/5
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
@@ -143,12 +127,6 @@ namespace SimpleDrive.App.Controllers
             if (file == null)
             {
                 return BadRequest();
-            }
-
-            if (!HasPermission(file))
-            {
-                // neither owner nor shared to
-                return Unauthorized();
             }
 
             var stream = _fileService.OpenStream(GetFullPath(file.Path));

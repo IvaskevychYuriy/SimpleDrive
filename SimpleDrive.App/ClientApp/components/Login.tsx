@@ -36,9 +36,8 @@ class Login extends React.Component<RouteComponentProps<LoginProps>, LoginState>
     onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const model = new LoginInfo();
-        Object.assign(model, this.state);
-
+        const model = { ...this.state };
+        
         try {
             if (this.isLogin) {
                 await authenticationService.login(model);

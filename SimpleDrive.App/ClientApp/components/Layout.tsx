@@ -28,11 +28,14 @@ const bodyDiv: React.CSSProperties = {
 export class Layout extends React.Component<LayoutProps, {}> {
     public render() {
         return (
-            <div style={root}>
-                <Route component={Menu} />
-                <div style={bodyDiv}>
-                    { this.props.children }
+            <React.Fragment>
+                <div style={root}>
+                    <Route component={Menu} />
+                    <div style={bodyDiv}>
+                        {this.props.children}
+                    </div>
                 </div>
+
                 <ToastContainer
                     position="bottom-center"
                     autoClose={2000}
@@ -41,7 +44,7 @@ export class Layout extends React.Component<LayoutProps, {}> {
                     pauseOnVisibilityChange
                     draggable
                     pauseOnHover />
-            </div>
+            </React.Fragment>
         );
     }
 }
