@@ -9,3 +9,22 @@ div[role=tooltip] {
 .flex-infinite-spacer {
     flex: 9999;
 }
+
+.ordinalFontRoot * {
+    font-size: inherit !important;
+}
+
+.table-head-bold-font > th > tr {
+    font-weight: bold;
+}
+
+/* check-box label */
+.form-checkbox > label {
+    min-width: 20em;
+}
+
+/* check-box itself */
+.form-checkbox > span > span {    
+    justify-content: initial;
+    margin-left: -5px;
+}

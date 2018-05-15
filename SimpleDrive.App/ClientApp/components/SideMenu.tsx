@@ -7,6 +7,7 @@ import { MenuRouterProps } from '../interfaces/MenuRouterProps';
 import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import FolderIcon from '@material-ui/icons/Folder';
 import FolderSharedIcon from '@material-ui/icons/FolderShared';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 
 import authenticationService from '../services/AuthenticationService';
 import RoleNames from '../constants/RoleNames';
@@ -69,6 +70,12 @@ export class SideMenu extends React.Component<MenuRouterProps<{}>, SideMenuState
                 </ListItemIcon>
                 <ListItemText primary="All Documents" />
             </ListItem>
+            <ListItem button onClick={() => this.props.history.push('/users')}>
+                <ListItemIcon>
+                    <SupervisorAccountIcon />
+                </ListItemIcon>
+                <ListItemText primary="Users" />
+            </ListItem>
         </div>
     );
 
@@ -82,13 +89,12 @@ export class SideMenu extends React.Component<MenuRouterProps<{}>, SideMenuState
                 <div style={emptyHeaderPlaceholder}></div>
 
                 <List style={drawer}>{this.guestItems}</List>
-                <Divider />
 
                 {
                     isUser 
                     ? ( <React.Fragment>
-                            <List style={drawer}>{this.mainItems}</List>
                             <Divider />
+                            <List style={drawer}>{this.mainItems}</List>
                         </React.Fragment>)
                     : null
                 }
@@ -96,8 +102,8 @@ export class SideMenu extends React.Component<MenuRouterProps<{}>, SideMenuState
                 {
                     isAdmin 
                     ? ( <React.Fragment>
-                            <List style={drawer}>{this.adminItems}</List>
                             <Divider />
+                            <List style={drawer}>{this.adminItems}</List>
                         </React.Fragment>)
                     : null
                 }

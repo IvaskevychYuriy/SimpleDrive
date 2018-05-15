@@ -22,7 +22,7 @@ export default class FileShareDialog extends React.Component<RouteComponentProps
         const params = this.props.match.params;
         try {
             await sharingService.getAccess(params.fileId, params.permission);
-            toast.info("Success!")
+            toast.success("Success!")
         } catch {
             toast.error("Oops, could not share the file with you", {autoClose: 5000});
         }

@@ -120,11 +120,6 @@ export default class FileShareDialog extends React.Component<FileShareDialogProp
     }
 
     render() {  
-        const test: any = {};
-        if (this.state.isPubliclyVisible) {
-            test['checked'] = 'checked';
-        }
-
         return (
             <Dialog open={this.props.isOpen} style={dialogStyle} onClose={this.props.onClose}>
                 <DialogTitle style={dialogTitleStyle}>Generate Share Link</DialogTitle>
@@ -149,7 +144,7 @@ export default class FileShareDialog extends React.Component<FileShareDialogProp
                     </TextField>
                 </div>
                 <div style={dialogContentStyle}>
-                    <FormControl >
+                    <FormControl className="form-checkbox">
                         <InputLabel htmlFor="public-visibility" shrink>Public</InputLabel>
                         <Checkbox
                             id="public-visibility"
