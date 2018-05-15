@@ -52,7 +52,6 @@ export default class UsersGrid extends React.Component<UsersGridProps, UsersGrid
     }
 
     private editUser = (user: User) => {
-        console.log(user);
         this.setState({
             currentEditingUser: user,
             editingEnabled: true

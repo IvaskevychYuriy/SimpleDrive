@@ -40,16 +40,14 @@ export default class UserEditDialog extends React.Component<UserEditProps, UserE
     constructor(props: UserEditProps) {
         super(props);
         
-        console.log(props.user);
         this.state = {
-            editModel: Object.assign({}, props.user) as UserEditModel
+            editModel: { ...props.user } as UserEditModel
         }; 
     }
 
     componentWillReceiveProps(props: UserEditProps) {  
-        console.log(props.user);  
         this.setState({
-            editModel: Object.assign({}, props.user) as UserEditModel
+            editModel: { ...props.user } as UserEditModel
         });
     }
 
@@ -63,19 +61,18 @@ export default class UserEditDialog extends React.Component<UserEditProps, UserE
     }
 
     private handleAllowQuotaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(event.target.checked);
         this.setState({
-            editModel: Object.assign({}, this.state.editModel, {
+            editModel: { ...this.state.editModel, ...{
                 quotaAllowed: event.target.checked ? 0 : null
-            })
+            }}
         });
     }
 
     private handleQuotaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
-            editModel: Object.assign({}, this.state.editModel, {
-                quotaAllowed: event.target.value
-            })
+            editModel: { ...this.state.editModel, ...{
+                quotaAllowed: Number(event.target.value)
+            }}
         });
     }
 
