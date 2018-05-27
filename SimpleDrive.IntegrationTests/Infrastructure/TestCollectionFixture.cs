@@ -29,10 +29,13 @@ namespace SimpleDrive.IntegrationTests.TestFixtures
 
             _server.Host.Migrate();
             _server.Host.SeedData();
+
+            Client.EnsureLoggedIn().Wait();
         }
 
         public void Dispose()
         {
+            Client.ClearCookies();
             _server.Host.Drop();
 
             Client.Dispose();
