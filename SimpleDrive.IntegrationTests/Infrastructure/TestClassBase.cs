@@ -18,10 +18,12 @@ namespace SimpleDrive.IntegrationTests.Infrastructure
         private readonly IDbContextTransaction _transaction;
 
         protected readonly HttpClient _client;
-        
+        protected readonly IServiceScopeFactory _scopeFactory;
+
         public TestClassBase(T classFixture)
         {
             _client = classFixture.CollectionFixture.Client;
+            _scopeFactory = classFixture.CollectionFixture.ScopeFactory;
 
             using (var scope = classFixture.CollectionFixture.ScopeFactory.CreateScope())
             {
