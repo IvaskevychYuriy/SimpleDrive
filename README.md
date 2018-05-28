@@ -1,6 +1,10 @@
 # [SimpleDrive](https://simpledrive.azurewebsites.net) [![Build status](https://ci.appveyor.com/api/projects/status/b2gaxlk1byh9uthr/branch/dev?svg=true)](https://ci.appveyor.com/project/SimpleDriveOrganization/simpledrive/branch/dev)
 
+## Description
+
 File sharing system
+
+[Specs](https://docs.google.com/document/d/19CF6aetz2xZV3bxius6UmRTRwb339w5ZSGN2BGqyNU8/edit?usp=sharing)
 
 ## FAQ
 
