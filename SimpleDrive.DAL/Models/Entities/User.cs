@@ -26,6 +26,8 @@ namespace SimpleDrive.DAL.Models
 
         public string Location { get; set; }
 
+        public int RegistrationYear { get; set; }
+
         public virtual ICollection<File> Files { get; set; }
 
         public virtual ICollection<ResourcePermission> ResourcePermissions { get; set; }
