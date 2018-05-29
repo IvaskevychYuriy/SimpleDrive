@@ -6,6 +6,7 @@ using SimpleDrive.App.Constants;
 using SimpleDrive.App.DataTransferObjects;
 using SimpleDrive.DAL;
 using SimpleDrive.DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -55,6 +56,18 @@ namespace SimpleDrive.App.Controllers
 
             users = users.Where(u => !admins.Any(a => a.Id == u.Id)).ToList();
             return Ok(_mapper.Map<List<UserDTO>>(users));
+        }
+
+        // GET api/<controller>
+        [Authorize(Roles = RoleNames.AdminRoleName)]
+        [HttpGet("used")]
+        public async Task<ActionResult> GetUsedSize(int age)
+        {
+            var usedSize = _dbContext.Users
+                .Where(u => DateTime.UtcNow.Year - u.RegistrationYear <= age)
+                .Sum(u => u.Files.Sum(f => f.Length));
+
+            return Ok(usedSize);
         }
 
         // DELETE api/<controller>/5
