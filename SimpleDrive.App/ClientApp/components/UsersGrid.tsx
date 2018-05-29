@@ -95,7 +95,7 @@ export default class UsersGrid extends React.Component<UsersGridProps, UsersGrid
             toast.error("An error occured");
         }
     }
-    
+
     private actions = (user: User) => (
         <div>
             <Tooltip title="Delete">
@@ -118,20 +118,22 @@ export default class UsersGrid extends React.Component<UsersGridProps, UsersGrid
                     <TableHead className="table-head-bold-font">
                         <TableRow>
                             <TableCell>User</TableCell>
+                            <TableCell>Location</TableCell>
                             <TableCell numeric>Quota</TableCell>
                             <TableCell numeric>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        { this.state.users.map(u => {
+                        {this.state.users.map(u => {
                             return (
                                 <TableRow key={u.id}>
                                     <TableCell>{u.userName}</TableCell>
+                                    <TableCell>{u.location}</TableCell>
                                     <TableCell numeric>{u.quotaAllowed}</TableCell>
                                     <TableCell numeric>{this.actions(u)}</TableCell>
                                 </TableRow>
                             );
-                        }) }
+                        })}
                     </TableBody>
                 </Table>
 

@@ -8,6 +8,7 @@ using SimpleDrive.App.DataTransferObjects;
 using SimpleDrive.DAL.Models;
 using System;
 using System.Diagnostics;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SimpleDrive.App.Controllers
@@ -44,11 +45,11 @@ namespace SimpleDrive.App.Controllers
         // POST: api/Home/Register
         [AllowAnonymous]
         [HttpPost("api/[controller]/register")]
-        public async Task<IActionResult> Register([FromBody] LoginInfoDTO model)
-        {   
+        public async Task<IActionResult> Register([FromBody] RegisterInfoDTO model)
+        {
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = model.Email, Email = model.Email, RegistrationYear = DateTime.UtcNow.Year };
+                var user = new User { UserName = model.Email, Email = model.Email, Location = model.Location, RegistrationYear = DateTime.UtcNow.Year };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -90,7 +91,7 @@ namespace SimpleDrive.App.Controllers
                 var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, true);
                 if (result.Succeeded)
                 {
-                    var mappedUser =  _mapper.Map<UserProfileDTO>(user);
+                    var mappedUser = _mapper.Map<UserProfileDTO>(user);
                     mappedUser.Roles = await _userManager.GetRolesAsync(user);
                     return StatusCode(code, mappedUser);
                 }

@@ -24,7 +24,6 @@ namespace SimpleDrive.App.MappingProfiles
 
             CreateMap<User, UserDTO>();
 
-
             // maps dtos to models
             CreateMap<UserUpdateDTO, User>(MemberList.Source)
                 .ForMember(src => src.Id, opt => opt.Ignore());

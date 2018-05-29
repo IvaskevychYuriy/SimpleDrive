@@ -15,6 +15,7 @@ export interface LoginProps {
 export interface LoginState {
     email: string;
     password: string;
+    location: string;
     rememberMe: boolean;
 }
 
@@ -25,6 +26,7 @@ class Login extends React.Component<RouteComponentProps<LoginProps>, LoginState>
         this.state = {
             email: '',
             password: '',
+            location: '',
             rememberMe: false
         };
     }
@@ -37,7 +39,7 @@ class Login extends React.Component<RouteComponentProps<LoginProps>, LoginState>
         e.preventDefault();
 
         const model = { ...this.state };
-        
+
         try {
             if (this.isLogin) {
                 await authenticationService.login(model);
@@ -64,6 +66,12 @@ class Login extends React.Component<RouteComponentProps<LoginProps>, LoginState>
         })
     }
 
+    onLocationChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        this.setState({
+            location: e.currentTarget.value
+        })
+    }
+
     render() {
         return (
             <form onSubmit={this.onSubmit}>
@@ -75,21 +83,33 @@ class Login extends React.Component<RouteComponentProps<LoginProps>, LoginState>
                                 id="email"
                                 type="email"
                                 value={this.state.email}
-                                onChange={this.onEmailChange} 
+                                onChange={this.onEmailChange}
                             />
                         </FormControl>
                     </Grid>
                     <Grid item={true} xs={12}>
                         <FormControl fullWidth={true}>
                             <InputLabel required={true} htmlFor="password">Password</InputLabel>
-                            <Input 
+                            <Input
                                 id="password"
                                 type="password"
                                 value={this.state.password}
-                                onChange={this.onPasswordChange} 
+                                onChange={this.onPasswordChange}
                             />
                         </FormControl>
                     </Grid>
+                    {
+                        !this.isLogin && <Grid item={true} xs={12}>
+                            <FormControl fullWidth={true}>
+                                <InputLabel required={true} htmlFor="location">Location</InputLabel>
+                                <Input
+                                    id="location"
+                                    value={this.state.location}
+                                    onChange={this.onLocationChange}
+                                />
+                            </FormControl>
+                        </Grid>
+                    }
                     <Grid item={true} xs={4}>
                         <Button fullWidth={true} type="submit" variant="raised"> {this.isLogin ? 'Login' : 'Register'} </Button>
                     </Grid>
