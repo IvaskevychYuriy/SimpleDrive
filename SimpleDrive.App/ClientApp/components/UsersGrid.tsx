@@ -1,7 +1,7 @@
 import * as React from "react";
 import { User } from "../models/User";
 import UserEditDialog from "./UserEditDialog";
-import { Paper, Table, TableHead, TableRow, TableCell, TableBody, IconButton, Tooltip } from "material-ui";
+import { Paper, Table, TableHead, TableRow, TableCell, TableBody, IconButton, Tooltip, FormHelperText, InputLabel, FormControl, Input, Button } from "material-ui";
 import { TableEditIcon } from "mdi-react";
 import DeleteIcon from "mdi-react/DeleteIcon";
 
@@ -13,6 +13,15 @@ const rootStyle: React.CSSProperties = {
     width: '90%'
 };
 
+const filterContainerStyle: React.CSSProperties = {
+    display: 'flex',
+    marginTop: 50
+};
+
+const spacerStyle: React.CSSProperties = {
+    flex: 20
+};
+
 interface UsersGridProps {
 }
 
@@ -20,6 +29,8 @@ interface UsersGridState {
     users: User[];
     currentEditingUser: User;
     editingEnabled: boolean;
+    currentAgeFilter?: number;
+    currentUsedSizeForAge?: number;
 }
 
 export default class UsersGrid extends React.Component<UsersGridProps, UsersGridState> {
@@ -29,7 +40,9 @@ export default class UsersGrid extends React.Component<UsersGridProps, UsersGrid
         this.state = {
             users: [],
             currentEditingUser: {} as User,
-            editingEnabled: false
+            editingEnabled: false,
+            currentAgeFilter: null,
+            currentUsedSizeForAge: null
         };
     }
 
@@ -64,6 +77,23 @@ export default class UsersGrid extends React.Component<UsersGridProps, UsersGrid
             currentEditingUser: {} as User,
             editingEnabled: false
         });
+    }
+
+    private hangleAgeFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            currentAgeFilter: Number(event.target.value)
+        });
+    }
+
+    private filterByAge = async () => {
+        try {
+            const sizeUsed = await usersService.usedSize(this.state.currentAgeFilter);
+            this.setState({
+                currentUsedSizeForAge: sizeUsed
+            });
+        } catch {
+            toast.error("An error occured");
+        }
     }
     
     private actions = (user: User) => (
@@ -104,6 +134,34 @@ export default class UsersGrid extends React.Component<UsersGridProps, UsersGrid
                         }) }
                     </TableBody>
                 </Table>
+
+                <div style={filterContainerStyle}>
+                    <FormControl>
+                        <InputLabel htmlFor="age" shrink>Age</InputLabel>
+                        <Input name="age" id="age"
+                            type="numeric"
+                            value={this.state.currentAgeFilter || 0}
+                            onChange={this.hangleAgeFilterChange}
+                        >
+                        </Input>
+                        <FormHelperText>Registration Age</FormHelperText>
+                    </FormControl>
+
+                    <FormControl >
+                        <Button
+                            variant="raised"
+                            color="primary"
+                            onClick={this.filterByAge}>
+                            Filter
+                        </Button>
+                    </FormControl>
+                    
+                    <div style={spacerStyle}></div>
+
+                    <div>
+                        <p>{this.state.currentUsedSizeForAge}</p>
+                    </div>
+                </div>
                 
                 <UserEditDialog isOpen={this.state.editingEnabled} user={this.state.currentEditingUser} onClose={this.onEditClose}></UserEditDialog>
             </Paper>

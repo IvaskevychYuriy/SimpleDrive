@@ -17,6 +17,11 @@ class UsersService {
     async delete(id: number): Promise<void> {
         await http.delete(`users/${id}`);
     }
+
+    async usedSize(age: number): Promise<number> {
+        const result = await http.get<number>(`users/used?age=${age}`);
+        return result.data;
+    }
 }
 
 export default new UsersService()

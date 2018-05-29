@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SimpleDrive.App.Constants;
 using SimpleDrive.App.DataTransferObjects;
 using SimpleDrive.DAL.Models;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -47,7 +48,7 @@ namespace SimpleDrive.App.Controllers
         {   
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = model.Email, Email = model.Email };
+                var user = new User { UserName = model.Email, Email = model.Email, RegistrationYear = DateTime.UtcNow.Year };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
