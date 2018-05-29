@@ -3,12 +3,13 @@ import { AxiosResponse } from "axios";
 
 import { LoginInfo } from "../models/LoginModel";
 import { UserProfile } from "../models/UserProfile";
+import { RegisterModel } from "../models/RegisterModel";
 
 class AuthenticationService {
     private static readonly CURRENT_USER_KEY = 'currentUser';
     private callbacks: ((isLoggedIn: boolean) => void)[] = [];
 
-    constructor() { 
+    constructor() {
         this.handleResponse = this.handleResponse.bind(this);
     }
 
@@ -38,7 +39,7 @@ class AuthenticationService {
 
     set userProfile(value: UserProfile) {
         const isLoggedIn: boolean = value !== null;
-        
+
         if (isLoggedIn) {
             localStorage.setItem(AuthenticationService.CURRENT_USER_KEY, JSON.stringify(value));
         } else {
@@ -49,13 +50,13 @@ class AuthenticationService {
             callback(isLoggedIn);
         }
     }
-  
+
     login(model: LoginInfo) {
         return http.post<UserProfile>('home/login', model)
             .then(this.handleResponse);
     }
-    
-    register(model: LoginInfo) {
+
+    register(model: RegisterModel) {
         return http.post<UserProfile>('home/register', model)
             .then(this.handleResponse);
     }
@@ -65,7 +66,7 @@ class AuthenticationService {
         return http.post('home/logout');
     }
 
-    private handleResponse(response : AxiosResponse<UserProfile>) : UserProfile {
+    private handleResponse(response: AxiosResponse<UserProfile>): UserProfile {
         this.userProfile = response.data;
         return response.data;
     }

@@ -2,13 +2,19 @@ import http from "./core/http";
 import { AxiosResponse } from "axios";
 import File from '../models/File';
 import { GridTypes } from "../models/enumerations/GridTypes";
+import { SummaryModel } from "../models/SummaryModel";
 
 class FileService {
-    
+
     async listFiles(gridType: GridTypes): Promise<File[]> {
         const url = this.getUrlByType(gridType);
         const response = await http.get<File[]>(url);
         return response.data.map(x => new File(x));
+    }
+
+    async getSummary(): Promise<SummaryModel[]> {
+        const response = await http.get('files/summary');
+        return response.data;
     }
 
     async upload(files: FileList, progress: (percentCompleted: number) => void) {

@@ -41,7 +41,27 @@ namespace SimpleDrive.App.Controllers
             _mapper = mapper;
             _fsOptions = fsOptions.Value;
         }
-        
+
+        [HttpGet("summary")]
+        [Authorize(Roles = Constants.RoleNames.AdminRoleName)]
+        public async Task<IActionResult> GetSummary()
+        {
+            var query = _dbContext.Users
+                .SelectMany(u => u.Files, (user, file) => new
+                {
+                    Location = user.Location,
+                    Length = file.Length
+                })
+                .GroupBy(x => x.Location)
+                .Select(g => new LocationSummaryDTO
+                {
+                    Location = g.Key,
+                    Length = g.Sum(x => x.Length)
+                });
+
+            return Ok(query.ToList());
+        }
+
         // GET api/<controller>/public
         [HttpGet("public")]
         public async Task<ActionResult> GetPublic()
@@ -196,7 +216,7 @@ namespace SimpleDrive.App.Controllers
 
             return Ok(file.Path);
         }
-        
+
         // POST api/<controller>/sharing
         [HttpPost("sharing")]
         public async Task<ActionResult> SharingOptions([FromBody] FileShareModel model)

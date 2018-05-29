@@ -24,6 +24,8 @@ namespace SimpleDrive.DAL.Models
 
         public long? QuotaAllowed { get; set; }
 
+        public string Location { get; set; }
+
         public virtual ICollection<File> Files { get; set; }
 
         public virtual ICollection<ResourcePermission> ResourcePermissions { get; set; }

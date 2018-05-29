@@ -76,6 +76,12 @@ export class SideMenu extends React.Component<MenuRouterProps<{}>, SideMenuState
                 </ListItemIcon>
                 <ListItemText primary="Users" />
             </ListItem>
+            <ListItem button onClick={() => this.props.history.push('/summary')}>
+                <ListItemIcon>
+                    <SupervisorAccountIcon />
+                </ListItemIcon>
+                <ListItemText primary="Summary by location" />
+            </ListItem>
         </div>
     );
 
